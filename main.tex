@@ -1,7 +1,8 @@
-﻿\documentclass[master,euler,twoside,openright]{ustcthesis}
+\documentclass[master,euler,twoside,openright]{ustcthesis}
 % 默认twoside 双面打印
 % 将master修改为bachelor, doctor or master
 % 要使用adobe字体，添加adobefonts选项
+% 要使用Mac系统的字体，添加macfonts选项
 % 使用euler数学字体，如不愿使用，去掉euler
 % 使用外文写作，请添加notchinese
 
@@ -48,7 +49,7 @@
   \ensubmitdate{Thimber, 2099}
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% If you use another language instead of chinese and english, then you
+% If you use another language instead of chinese or english, then you
 % should define some strings and provide information in your language.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  \otherustcstr{zhong guo ke xue ji shu da xue}%A translation of `University of Science and Technology of China' in your language
@@ -68,6 +69,7 @@
 %  \otherdepart{mou xi}
 
 \begin{document}
+
   % 封面
   \maketitle
 
@@ -144,9 +146,6 @@
 \mainmatter
 
   \include{chapter/chap-intro}
-  \chapter{需求分析}
-  \section{ocr}
-  \subsection{ocr}
   \include{chapter/chap-guide}
   \include{chapter/chap-example}
   %自行添加
@@ -168,7 +167,9 @@
 
   % 附录，没有请注释掉
   \begin{appendix}
-    \include{chapter/chap-req}
+    %\include{chapter/chap-req}
+    %\chapter{hah}
+    \section{hah}
   \end{appendix}
 
   \makeatletter

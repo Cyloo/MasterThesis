@@ -1,4 +1,4 @@
-﻿%
+%
 % University of Science and Technology of China Thesis Template
 % For Bachelor Master and Doctor
 %
@@ -7,7 +7,7 @@
 %   Created 
 %       2014.03.26 by ywg@USTC
 %   Last Modified
-%       2015.03.17 by ywg@USTC
+%       2016.02.24 by ywg@USTC
 %
 %       $Id$
 %
@@ -21,6 +21,7 @@
 \newif\ifustc@doctor\ustc@doctorfalse
 \newif\ifustc@bachelor\ustc@bachelorfalse
 \newif\ifustc@adobefont\ustc@adobefontfalse
+\newif\ifustc@macfont\ustc@macfontfalse
 \newif\ifustc@euler\ustc@eulerfalse
 \newif\ifustc@notchinese\ustc@notchinesefalse
 
@@ -43,21 +44,23 @@
 %Use Euler math font
 \DeclareOption{euler}{\ustc@eulertrue}
 
-
 %Enhance compatibility
 \DeclareOption{adobefonts}{\ustc@adobefonttrue\PassOptionsToClass{adobefonts}{ctexbook}}
 \DeclareOption{adobefont}{\ustc@adobefonttrue\PassOptionsToClass{adobefonts}{ctexbook}}
+\DeclareOption{macfonts}{\ustc@macfonttrue\PassOptionsToClass{nofonts}{ctexbook}}
 
 %Pass all unprocessed/unknown options to ctexbook. If a wrong option is specified, perhaps ctexbook will throw an error.
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{ctexbook}}
 \ProcessOptions
 
+\LoadClass[cs4size,a4paper,fancyhdr,fntef]{ctexbook}
+
 %Minimum xeCJK version:3.2.10, date:2014/03/01
-\PassOptionsToPackage{CJKchecksingle}{xeCJK}
+%CheckSingle选项的作用是防止孤字成行，这是一个排版的重要细节。
+%xeCJK不知道哪个版本更新后由CJKchecksingle换成了CheckSingle，导致了之前的BUG。对于较旧的版本，但愿CJKchecksingle不会报错。
 %不再鼓励使用$$...$$的方式输入公式，可能会引起奇怪的问题
 %如果一定要用$$...$$输入公式。请在更新到上述版本后加入PlainEquation选项。
-
-\LoadClass[cs4size,a4paper,fancyhdr,fntef]{ctexbook}
+\@ifpackagelater{xeCJK}{2014/03/01}{\xeCJKsetup{CheckSingle=true}}{\xeCJKsetup{CJKchecksingle=true}}
       
 %Check if extra pack should be used.
 \ifustc@basic\relax\else\input{ustcxtra.cls}\relax\fi
@@ -173,10 +176,25 @@
 %Define font for vertical typesetting.
 \ifustc@adobefont
 	\setCJKfamilyfont{verthei}[RawFeature={vertical:}]{Adobe Heiti Std}\relax
-\else%
-	\setCJKfamilyfont{verthei}[RawFeature={vertical:}]{SimHei}\relax
+\else
+	\ifustc@macfont
+		\setCJKfamilyfont{verthei}[RawFeature={vertical:}]{Heiti SC}\relax
+	\else
+		\setCJKfamilyfont{verthei}[RawFeature={vertical:}]{SimHei}\relax
+	\fi
 \fi
 \newcommand{\ustc@verthei}{\CJKfamily{verthei}}
+
+
+\ifustc@macfont
+	\setCJKmainfont[BoldFont={Heiti SC}, ItalicFont={Kaiti SC}]{Songti SC}
+	\setCJKsansfont{Heiti SC}
+	\setCJKmonofont{STFangsong}
+	\setCJKfamilyfont{song}{Songti Sc}
+	\setCJKfamilyfont{hei}{Heiti SC}
+	\setCJKfamilyfont{kai}{Kaiti SC}
+	\setCJKfamilyfont{fs}{STFangsong}
+\fi
 
 %Set section numbering to subsubsection
 \setcounter{secnumdepth}{3}
@@ -232,8 +250,8 @@
 \fi
 \CTEXoptions[listfigurename={\ustc@ustclofname}]
 \CTEXoptions[listtablename={\ustc@ustclotname}]
-\newcommand\ustclot{\cleardoublepage\addcontentsline{toc}{chapter}{\ustc@ustclotname}\listoftables}
-\newcommand\ustclof{\cleardoublepage\addcontentsline{toc}{chapter}{\ustc@ustclofname}\listoffigures}
+\newcommand\ustclot{\cleardoublepage\phantomsection\addcontentsline{toc}{chapter}{\ustc@ustclotname}\listoftables}
+\newcommand\ustclof{\cleardoublepage\phantomsection\addcontentsline{toc}{chapter}{\ustc@ustclofname}\listoffigures}
 
 %New mathematical environments
 \ifustc@notchinese
@@ -461,9 +479,9 @@
   \thispagestyle{empty}
   \begin{center}
     \vspace*{0cm}
-      \USTCLarge{\ttfamily{University of Science and Technology of China}}
+      \USTCLarge{\sffamily{University of Science and Technology of China}}
     \vskip -0.2cm %-0.6cm
-    \USTCLARGE{\ttfamily\ifustc@doctor
+    \USTCLARGE{\sffamily\ifustc@doctor
       {A dissertation for doctor's degree}
     \else\ifustc@master
       {A dissertation for master's degree}
@@ -714,7 +732,7 @@
 
 %Declaration and authorization page
 \newcommand{\ustc@declaretext}{%
-本人声明所呈交的学位论文,是本人在导师指导下进行研究工作所取得的成果。
+本人声明所呈交的学位论文，是本人在导师指导下进行研究工作所取得的成果。
 除已特别加以标注和致谢的地方外，论文中不包含任何他人已经发表或撰写过
 的研究成果。与我一同工作的同志对本研究所做的贡献均已在论文中作了明确的说明。
 }
@@ -729,7 +747,7 @@
 保密的学位论文在解密后也遵守此规定。
 }
 \def\ustc@secret@newtitle{%
-   \raisebox{-1pt}{\large\Square}\ 公开\hspace{0.5cm}\raisebox{-1pt}{\large\Square}\ 保密\ \ustc@underline[4em]\relax\hspace{0.1em}年}
+   \raisebox{1.1mm}{\fbox{\rule{0pt}{1.4mm}\rule{1.4mm}{0pt}}}\ 公开\hspace{0.5cm}\raisebox{1.1mm}{\fbox{\rule{0pt}{1.4mm}\rule{1.4mm}{0pt}}}\ 保密（\ustc@underline[2em]\relax\hspace{0.1em}年）}
 \newcommand\make@authorization{%
  % \pdfbookmark{原创与授权声明}{authorization}
   \cleardoublepage
