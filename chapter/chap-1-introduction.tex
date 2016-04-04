@@ -1,99 +1,72 @@
-﻿
-\chapter{绪论}
+﻿\chapter{绪论}
 \label{chap:introduction}
 
-中国科学技术大学论文模板（ustcthesis）是按照中国科学技术大学学士、硕士和博士论文要求制作的\LaTeX 通用论文模板。其前身是中国科学技术大学本科论文模板（作者XPS，最后维护ywg）和中国科学技术大学研究生论文模板（作者Liuqs，主要维护Liuqs、Guolicai）。本模板在上述两模板基础上进行了整合梳理，将模板的基础实现和增强功能进行分离，分别提供最基础的ustcthesis.cls以及增强包ustcxtra.cls。其中，ustcthesis.cls仅提供模板的最基础格式，ustcxtra.cls则包含一些常用的优化设置及更为便捷的自定义命令。
+\section{领域现状}
+随着电子病历系统在医疗机构的迅速普及，大量医疗相关的重要信息以电子形式存储于医疗信息系统中。经过不断积累，各种形式的电子化医疗系统产生了体量庞大的医疗大数据。这些数据记录了临床医疗中的重要信息，例如，病人的主诉，检测结果，诊断信息，服用药物，以及不良反应等。医学信息学研究人员通过对海量医疗数据的分析可以发现与医疗质量，医疗安全以及药物效果相关的重要证据，从而提高公共医疗的质量和效率，加强医疗安全，并促进新治疗方法和药物的研发。根据麦肯锡发布的全球医疗机构分析报告，到2020年，医疗大数据分析市场将为全球节约1900亿美元。%这一段摘自http://www.cn-healthcare.com/article/20150709/content-476002.html
 
-本文是使用上述模板生成的示例文档，目的在于帮助使用者熟悉该模板的使用方法，并且为使用者学位论文的撰写提供基础代码示例。
+据计生委公布的数据，仅2014年，全国诊疗量就已达到78亿人次。虽然我国的医疗数据电子化进程在近些年来大大加快，不少医院仍然采用纸质病历系统；同时，很多医院也保留着病历系统电子化之前的病历数据，这些纸质化病历数据，数量庞大，纸质病历不仅在存放和分类管理上需要耗费大量的人力物力，而且也很难与电子化病历系统协同；另一方面，医院内部也有可能有着新旧两套电子病历系统，怎么将旧系统的病历数据迅速迁移到新系统，也是一个不小的挑战。
 
-\section{系统要求}
-\subsection{系统要求}
-本模板基于\CTeX 的ctexbook文档类进行定制，基于\XeTeX 引擎排版。使用本模板的最基础功能时，除了上述需求外，还需要如下几类宏包（直接引用）：
-\begin{description}
-\item[数学类]{amsmath、amsthm、amsfonts、amssymb、bm}
-\item[格式类]{titletoc、titlesec、geometry、caption}
-\item[表格类]{multicol、multirow}
-\item[其他]{xparse、xeCJK、hyperref、natbib、subfiles}
-\end{description}
-可能有部分宏包是由上述宏包以及\CTeX 间接引用的，此处不一一列举。
+纸质病历或旧电子病历系统的数据，如果采用人工录入的方式，工程量巨大，录入速度慢，成本也太高。一个可能的解决方案就是采用光学字符识别系统来录入。
 
-另外，如果需要使用增强的ustcxtra.cls，额外需要如下宏包（直接引用）：
-\begin{description}
-\item[默认载入]{times、algorithm2e、graphicx、psfrag、subfig、enumerate、epsfig、float、paralist、booktabs、footmisc、wasysym、longtable、bbm、indentfirst、ifthen、caption3、array、fancyvrb、xcolor、url}
-\item[条件载入]{eulervm（仅在文档类处于增强模式并在文档类选项注明euler时载入）}
-\end{description}
+\section{光学字符识别}
+光学字符识别（Optical Character Recognition，OCR）是指电子设备（例如扫描仪或数码相机）检查纸上打印的字符，通过检测暗、亮的模式确定其形状，然后用字符识别方法将形状翻译成计算机文字的过程；即，针对印刷体字符，采用光学的方式将纸质文档中的文字转换成为黑白点阵的图像文件，并通过识别软件将图像中的文字转换成文本格式，供文字处理软件进一步编辑加工的技术。如何除错或利用辅助信息提高识别正确率，是OCR最重要的课题，ICR（Intelligent Character Recognition）的名词也因此而产生。衡量一个OCR系统性能好坏的主要指标有：拒识率、误识率、识别速度、用户界面的友好性，产品的稳定性，易用性及可行性等。%这一段摘自百度百科http://baike.baidu.com/link?url=s_kl-u2xuLqDV94Wr463dgsaphj15atr7-iReGNsskTsMrCUK_4hBjpS5YaamRHWsD4G69bSsPPbZ1tnl1tQ2JUOSiGGK_WNrP7dtV8kT3STmVkfAXs95LNxFkm4E2IB
 
-\section{下载与安装}
-\subsection{模板文件清单}
-使用模板之前请确保模板文件没有缺失损坏。文件清单如\autoref{tab:filelist}，标注关键的文件需要确保文件以及路径的完整。
-\begin{table}[htp]
-\centering
-\tabcaption{模板主要文件清单}
-\label{tab:filelist}
-\begin{tabular}{lll}
-\toprule
-文件名&相对路径&备注\tabularnewline
-\midrule
-clean.bat			&./			&清理脚本\tabularnewline
-clean.sh			&./			&清理脚本\tabularnewline
-main.pdf			&./			&示例文件\tabularnewline
-main.tex 			&./			&示例TeX文件\tabularnewline
-make.bat			&./			&生成脚本\tabularnewline
-make.sh				&./			&生成脚本\tabularnewline
-ustcbib.bst		&./			&Bib格式文件\tabularnewline
-ustcthesis.cls		&./			&（关键）模板\tabularnewline
-ustcxtra.cls		&./			&（关键）模板增强\tabularnewline
-ustc\_logo\_fig.eps	&./figures	&（关键）科大校徽\tabularnewline
-ustc\_logo\_text.eps&./figures	&（关键）科大校名\tabularnewline
-\bottomrule
-\end{tabular}
-\end{table}
+针对汉字的字符识别工作比英文的识别要困难很多，最早可追溯到1966年。1966年IBM公司的Casey与Nagy首次提出了一个能识别1000个汉字的识别方案，这个方案是用模式匹配的方法进行汉字的识别。国内的汉字识别研究开始于70年代末[2]，至今，无论是在理论上还是实践上，均取得了较大的进展。国内的汉字识别技术研究可分为两个阶段[3][4]。
+\begin{itemize}
+	\item[第一阶段] 70年代到80年代末，汉字识别算法与方案研究阶段。通过研究人员的工作，提出了用于汉字识别的各种方法和特征，如特征点方法、汉字周边特征、脱壳透视分类法、汉字微结构特征、汉字的结构元特征等，并在此基础上研究成功二楼一批汉字识别系统。
+	\item[第二阶段] 90年代至今，将汉字识别技术从实验室推向市场，通过实践对各种汉字识别系统进行检验与考查，并不断提高汉字识别率和抗干扰性，从而满足用户的实际需要。
+\end{itemize}
 
-\subsection{模板下载与使用}
-由于Google公司决定停止Google Code服务，故原Google Code项目网站的模板整体迁移至GitHub网站并继续进行更新维护。本模板及本示例文件可以在GitHub网
-站\url{https://github.com/ywgATustcbbs?tab=repositories}下载。备份托管地址为\url{https://gitlab.lug.ustc.edu.cn/ywg/ustcthesis}，此托管网站由LUG@USTC提供服务。
-
-请在项目页面选择ustcthesis->新页面中选择Download Zip下载最新模板文件(\autoref{fig:download})。也可以通过git clone的方式获得模板。
+\subsection{技术介绍}
+光学字符识别是模式识别技术的一个应用，模式识别技术通过从训练数据中提取特征来训练和优化一个分类器，分类器训练完成之后，当有新的数据（测试数据）时，分类器会给出该输入数据的预测类标，一般来说，训练数据越多，分类器的分类效果就越好。一个典型的OCR系统大致由数据预处理、特征提取、分类器、数据后处理几个部分组成：
+\begin{itemize}
+	\item[数据预处理] 对输入的图像进行处理，突出有用的信息（例如文字），过滤掉无用的背景图片等，以便更好的进行特征提取，在这一步通常的处理方式有：灰度化、二值化、字符切分、倾斜矫正等步骤。
+	\item[特征提取] 对要识别的文字，我们要提取出可学习的特征，这些特征要使得不同文字在特征空间中的距离尽量大，加大文字间的区分度，常见的特征提取步骤是将处理后的图像数据向量化，并视情况选择是否需要降维。
+	\item[分类器] 特征提取后的数据需要交给分类器来训练和识别，一般需要一定大小的有标记的数据作为训练样本，对分类器进行训练，比较成熟和常用的分类器有支持向量机（SVM），K近邻，神经网络等。
+	\item[数据后处理] 分类器识别出来的字符可能并不完全准确，可能需要一些语言模型，利用上下文信息来进行校正。同时，后处理模块还需要对识别的文字进行格式化操作，并且能够正确地被归档，存储到相应的文件中。
+\end{itemize}
+从上面的描述中，我们可以大致得到一个字符识别的流程图（\autoref{pic:ocr-pipeline}），有关光学字符识别更深入的内容，我们会在\autoref{chap:implements}中详细阐述。
 
 \begin{figure}
 \centering
-\includegraphics[width=0.48\textwidth]{download}
-\includegraphics[width=0.48\textwidth]{download1}
-\figcaption{在GitHub上进行模板下载}
-\label{fig:download}
+  \includegraphics[scale=0.3]{figures/ocr-pipeline}
+  \figcaption{光学字符识别系统的整体流程图}
+  \label{pic:ocr-pipeline}
 \end{figure}
 
-\textbf{特别注意1:}本硕博通用论文模板的名称为ustcthesis，其他项目如ustcthesis.vi/ustcthesis.letter/ustcthesis.beamer是用作其他用途的模板，并非本模板所需文件，如对其感兴趣，请进入对应页面了解详情。
+\subsection{应用现状}
+近几年国内对印刷体汉字识别的研究不断深入，识别准确率不断上升，也有一些较成熟的商业化产品，比较知名的有泰比（ABBYY）、中文紫光OCR、CAJViewer、清华OCR、尚书七号等。其中尤以泰比的OCR效果为佳，不仅产品线丰富、支持语言多、识别精度高，且对一些表格、框图等复杂数据有比较好的分析能力。但是，购买泰比的OCR服务是昂贵的，仅个人用户使用的专业版就售价1500元之巨，遑论针对企业用户的价格了。除了价格因素外，将现有的商业OCR系统应用到病历数据录入时，一个更棘手的问题是如果做好版面分析，因为病人病历数据，往往条目众多，结构复杂，不同医院病历数据的格式标准各不相同，如果直接套用商用OCR软件，识别效果是很不理想的，或者说如果没有针对病历数据的做适当的处理和调整，这些OCR软件是完全不可用的。
 
-\textbf{特别注意2:}此前开发的本科和硕博模板已暂停支持，但仍然可以选择对应的版本（ustcthesis.bachelor和ustcthesis.msphd）进行下载。
+如何解决这个问题呢？针对病历数据格式复杂的问题，我们可以有针对性的在ocr系统中前置一个版面分析模块，将结构复杂的图片转换成简单的、便于进行文字识别的图片，再交给后续的ocr系统，将能有效的提高可用性；而针对商用OCR软件比较昂贵的问题，我们可以根据OCR系统的工作原理，自主实现一个OCR系统，即训练一个针对图片数据的文本分类器，或是采用已有的免费开源的OCR引擎，其中最为著名且效果得到广泛验证的，就是Tesseract OCR引擎。
 
-模板的安装使用方法有多种，最为简单便捷的方法是直接解压缩下载好的压缩包，修改其中的main.tex文件以及chapter文件夹下的文件，必要时增加所需要的文件。需要注意的是确保所有文件使用UTF-8编码。Windows系统中将其他编码的文件转化为UTF-8的方法是: 用记事本打开这些文件, 然后点击文件—另存为—在最下方选择UTF-8 编码。
+\subsubsection{Tesseract}
+Tesseract OCR引擎是一款能运行在多系统全平台（Windows，Linux，Mac，IOS，Android）的免费开源OCR引擎，最早由惠普公司Hewlett Packard实验室的工程师在1985年到1994年间开发和维护，并于2005年开放源代码，2006年之后由谷歌公司接手开发和维护。
+在1995年，Tesseract在识别准确率上是排名前三的OCR引擎，最早的版本只支持英文，之后逐步添加多语言的支持，其中就包括中文。准确性较高、支持多语言加之免费开源，使得Tesseract在这些年，广受赞誉，是公认最好的开源OCR引擎，感兴趣的读者可访问\href{https://github.com/tesseract-ocr/tesseract}{Tesseract的GitHub主页}来获取最新的源代码。
 
-\subsection{\texorpdfstring{\LaTeX}{LaTeX}系统的安装和使用}
-由于本模板使用了较多的宏包，因此建议使用TeXLive2013及以上版本的\LaTeX 发行版。TeXLive2013可以在Windows、GNU/Linux和大多数Unix系统中运行。对于MacOSX，推荐使用MacTeX-2013。详细信息参考\url{https://www.tug.org/texlive/}。
+\subsubsection{其他相关工作}
+在研究领域，也有一些基于光学字符识别的应用[2][2]，这些应用也是将名片识别、车牌识别、档案识别等问题转化为光学字符识别问题，然后或自行实现简单的OCR分类器，或采用开源OCR引擎，来搭建系统，这些工作中，针对医学档案的并不多，且准确率也得不到保障，从整体完成度来看，其学术探索意味大于实际使用。
 
-对于中国科学技术大学的校内用户而言，最方便的获取TeXLive2013的途径是使用LUG@USTC提供的CTAN镜像源（\url{http://mirrors.ustc.edu.cn/CTAN/}）。最新的TeXLive位于/CTAN/systems/texlive/目录（\url{http://mirrors.ustc.edu.cn/CTAN/systems/texlive/}）内。用户可以选择进入Images文件夹下载完整的光盘并刻录安装，也可以选择进入tlnet文件夹下载运行install-tl.exe进行在线安装。需要注意的是，在线安装的时候可以通过切换安装源为本校镜像源来加快下载安装速度。
 
-对于校外用户，可以通过CTAN.org获得官方的TeXLive。CTAN在全球41个国家和地区分布有115个镜像站点，它们的地址可以在\url{http://www.ctan.org/mirrors/}找到。
+%基于OCR的试卷版面理解 http://www.cnki.net/KCMS/detail/detail.aspx?QueryID=6&CurRec=7&recid=&filename=1012480019.nh&dbname=CMFD201301&dbcode=CMFD&pr=&urlid=&yx=&uid=WEEvREcwSlJHSldRa1FiOXJWdGtheGlTb2J2d3JMd2tzci9ZNjFZcEZ2ZEE1b3VMVk4xY2lHMlBVdjlUSm1EeElRPT0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MTA1ODV4WVM3RGgxVDNxVHJXTTFGckNVUkx5ZlkrWnFGaWpnVnJyUFZGMjZITGV3SHRITnBwRWJQSVI4ZVgxTHU=
+%基于OCR技术的医疗档案管理系统研究与构建 http://www.cnki.net/KCMS/detail/detail.aspx?QueryID=2&CurRec=2&recid=&filename=YLSX201510031&dbname=CJFDLAST2015&dbcode=CJFQ&pr=&urlid=&yx=&uid=WEEvREcwSlJHSldRa1FiOXJWdGtheGlTb2J2d3JMd2tzci9ZNjFZcEZ2ZEE1b3VMVk4xY2lHMlBVdjlUSm1EeElRPT0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MjI2NDg3RGgxVDNxVHJXTTFGckNVUkx5ZlkrWnFGaWpnVUxyS1BDSFlkckc0SDlUTnI0OUdaWVI4ZVgxTHV4WVM=
 
-\subsection{推荐使用的编辑器}
-\LaTeX 的源文件是一个或多个文本文件，这意味着可以使用最为简单的文本编辑器来撰写论文。但是和许多编程语言类似，使用一款带有语法高亮、命令补全等功能的文本编辑器能够大大提升协作效率。
+\section{本文主要工作}
+本工作旨在开发一个基于中文字符识别的医学档案生成与自动归类系统，具体来说，通过针对指定病历结构的版面分析，得到结构简单明确的包含文字的图片，再加上数据预处理、开源OCR引擎Tesseract的引入和优化、病历数据矫正分类归档等，最终实现了比较精确的医学档案生成和自动归档，识别率能达到90\%以上，有较高的实用价值。同时，文章从系统的架构设计到方案选取，再到具体实现，都有着比较详尽的阐述，这对类似的应用研究与开发提供了一个参考。
 
-对于不同的编辑器而言，能够实现的功能也不尽相同，加之不同用户拥有不同的使用习惯，简单武断的说某一款编辑器好或者不好有失公允。对于\TeX 写作而言，用户使用的编辑器大致可以分为两类：通用的文本编辑器和专用的GUI编辑器。通用的文本编辑器中公认比较好用的有Vim（Linux）、Emacs（Linux）、Notepad++（Windows）等等\footnote{当然，这些软件可能都有跨平台版本，而且也有其他很多优秀的文本编辑器，不要在意这些细节啦，我并不想挑起编辑器的圣战。:P}。这些编辑器有着强大的功能，但是往往需要在编辑和编译之间来回切换。而专用的GUI编辑器如TeXShop（Mac）、TeXWorks（windows/Linux）和Winedit（Windows、付费软件）等虽然可能在文本编辑上略显笨拙，但是其优点在于编写和生成一体化，简单化。
-
-使用何种编辑器这个问题见仁见智，但是对于一个刚从word转来的新人，从界面简洁、操作简单、功能实用的角度出发，TeXWorks不失为一款优秀的GUI软件，如\autoref{fig:texworks}。
-
-\begin{figure}
-\centering
-\includegraphics[width=0.9\textwidth]{texworks}
-\figcaption{TeXWorks主界面}
-\label{fig:texworks}
-\end{figure}
-
-Windows系统下TeXWorks的界面拥有左右两个窗口，左边为编辑窗口，右边为预览窗口，当编辑完文档之后，只需点击绿色的开始按钮，就可以立即对文档进行保存并编译，可以选择不同的引擎进行处理。编译过程中的信息会在左侧窗口下方显示。TeXWorks默认UTF-8编码，安装时自动查找TeX安装目录，支持自动缩进、语法高亮、命令补全、正则式查找以及TeX文件和PDF的正反查找（即点击命令跳转到对应pdf文字位置以及点击pdf文字跳转到对应命令，操作是Ctrl+单击）。这些功能对新手来说都是十分友好的。
-
-\section{问题反馈}
-
-如果您在使用过程中有疑问，遇到困难，可以在\href{http://bbs.ustc.edu.cn/cgi/bbsdoc?board=TeX}{瀚海星云\TeX{}讨论区}或者相关的\LaTeX 论坛（如\href{http://bbs.ctex.org}{CTEX 论坛}）寻求帮助，但是请注意遵守论坛的各项规定。
-
-如果使用过程中遇到Bug，请提交到\href{http://bbs.ustc.edu.cn/cgi/bbsdoc?board=TeX}{瀚海星云\TeX{}讨论区}，或者提交到相应的\href{http://code.google.com/p/ustcthesis/issues/list}{Google UstcThesis Project(http://code.google.com/p/ustcthesis/issues/list)}，请注明是什么版本模板的bug。
+\section{论文组织}
+本论文的组织方式如下：
+\begin{itemize}
+	\item[\autoref{chap:introduction}] 
+	绪论，简要阐述领域背景和研究意义，分析了应用现状与相关工作，并阐明本文的主要工作。
+	\item[\autoref{chap:requirements-analysis}] 需求分析，详细介绍了医学病历档案录入的实际需求和输入输出格式，分析了可能的技术难点。
+	\item[\autoref{chap:system-framework}] 
+	架构设计，从需求出发，针对问题难点设计合理的总体框架。
+	\item[\autoref{chap:implements}] 
+	实现细节，详细阐述了系统的核心技术和实现细节。
+	\item[\autoref{chap:experiments}]
+	实验，从准确率和速度维度对系统进行性能测试，并通过对比实验展示优化效果。
+	\item[\autoref{chap:future-work}]
+	后续工作，分析了当前系统的不足之处，以及在后续的工作中如何解决它们。
+	\item[\autoref{chap:conclusion}]
+	总结，概括性的总结本文主要工作和贡献。
+\end{itemize}
