@@ -9,9 +9,9 @@
 纸质病历或旧电子病历系统的数据，如果采用人工录入的方式，工程量巨大，录入速度慢，成本也太高。一个可能的解决方案就是采用光学字符识别系统来录入。
 
 \section{光学字符识别}
-光学字符识别（Optical Character Recognition，OCR）是指电子设备（例如扫描仪或数码相机）检查纸上打印的字符，通过检测暗、亮的模式确定其形状，然后用字符识别方法将形状翻译成计算机文字的过程；即，针对印刷体字符，采用光学的方式将纸质文档中的文字转换成为黑白点阵的图像文件，并通过识别软件将图像中的文字转换成文本格式，供文字处理软件进一步编辑加工的技术。如何除错或利用辅助信息提高识别正确率，是OCR最重要的课题，ICR（Intelligent Character Recognition）的名词也因此而产生。衡量一个OCR系统性能好坏的主要指标有：拒识率、误识率、识别速度、用户界面的友好性，产品的稳定性，易用性及可行性等。%这一段摘自百度百科http://baike.baidu.com/link?url=s_kl-u2xuLqDV94Wr463dgsaphj15atr7-iReGNsskTsMrCUK_4hBjpS5YaamRHWsD4G69bSsPPbZ1tnl1tQ2JUOSiGGK_WNrP7dtV8kT3STmVkfAXs95LNxFkm4E2IB
+光学字符识别（Optical Character Recognition，OCR）是指电子设备（例如扫描仪或数码相机）检查纸上打印的字符，通过检测暗、亮的模式确定其形状，然后用字符识别方法将形状翻译成计算机文字的过程\citep{mori1992historical}。针对印刷体字符，采用光学的方式将纸质文档中的文字转换成为黑白点阵的图像文件，并通过识别软件将图像中的文字转换成文本格式，供文字处理软件进一步编辑加工的技术。如何除错或利用辅助信息提高识别正确率，是OCR最重要的课题，ICR（Intelligent Character Recognition）的名词也因此而产生。衡量一个OCR系统性能好坏的主要指标有：拒识率、误识率、识别速度、用户界面的友好性，产品的稳定性，易用性及可行性等。%这一段摘自百度百科http://baike.baidu.com/link?url=s_kl-u2xuLqDV94Wr463dgsaphj15atr7-iReGNsskTsMrCUK_4hBjpS5YaamRHWsD4G69bSsPPbZ1tnl1tQ2JUOSiGGK_WNrP7dtV8kT3STmVkfAXs95LNxFkm4E2IB
 
-针对汉字的字符识别工作比英文的识别要困难很多，最早可追溯到1966年。1966年IBM公司的Casey与Nagy首次提出了一个能识别1000个汉字的识别方案，这个方案是用模式匹配的方法进行汉字的识别。国内的汉字识别研究开始于70年代末[2]，至今，无论是在理论上还是实践上，均取得了较大的进展。国内的汉字识别技术研究可分为两个阶段[3][4]。
+针对汉字的字符识别工作比英文的识别要困难很多，最早可追溯到1966年。1966年IBM公司的Casey与Nagy首次提出了一个能识别1000个汉字的识别方案，这个方案是用模式匹配的方法进行汉字的识别。国内的汉字识别研究开始于70年代末\citep{trier1996feature}，至今，无论是在理论上还是实践上，均取得了较大的进展。国内的汉字识别技术研究可分为两个阶段\citep{FanxiaGuo,LongDing}。
 \begin{itemize}
 	\item[第一阶段] 70年代到80年代末，汉字识别算法与方案研究阶段。通过研究人员的工作，提出了用于汉字识别的各种方法和特征，如特征点方法、汉字周边特征、脱壳透视分类法、汉字微结构特征、汉字的结构元特征等，并在此基础上研究成功二楼一批汉字识别系统。
 	\item[第二阶段] 90年代至今，将汉字识别技术从实验室推向市场，通过实践对各种汉字识别系统进行检验与考查，并不断提高汉字识别率和抗干扰性，从而满足用户的实际需要。
@@ -44,11 +44,7 @@ Tesseract OCR引擎是一款能运行在多系统全平台（Windows，Linux，M
 在1995年，Tesseract在识别准确率上是排名前三的OCR引擎，最早的版本只支持英文，之后逐步添加多语言的支持，其中就包括中文。准确性较高、支持多语言加之免费开源，使得Tesseract在这些年，广受赞誉，是公认最好的开源OCR引擎，感兴趣的读者可访问\href{https://github.com/tesseract-ocr/tesseract}{Tesseract的GitHub主页}来获取最新的源代码。
 
 \subsubsection{其他相关工作}
-在研究领域，也有一些基于光学字符识别的应用[2][2]，这些应用也是将名片识别、车牌识别、档案识别等问题转化为光学字符识别问题，然后或自行实现简单的OCR分类器，或采用开源OCR引擎，来搭建系统，这些工作中，针对医学档案的并不多，且准确率也得不到保障，从整体完成度来看，其学术探索意味大于实际使用。
-
-
-%基于OCR的试卷版面理解 http://www.cnki.net/KCMS/detail/detail.aspx?QueryID=6&CurRec=7&recid=&filename=1012480019.nh&dbname=CMFD201301&dbcode=CMFD&pr=&urlid=&yx=&uid=WEEvREcwSlJHSldRa1FiOXJWdGtheGlTb2J2d3JMd2tzci9ZNjFZcEZ2ZEE1b3VMVk4xY2lHMlBVdjlUSm1EeElRPT0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MTA1ODV4WVM3RGgxVDNxVHJXTTFGckNVUkx5ZlkrWnFGaWpnVnJyUFZGMjZITGV3SHRITnBwRWJQSVI4ZVgxTHU=
-%基于OCR技术的医疗档案管理系统研究与构建 http://www.cnki.net/KCMS/detail/detail.aspx?QueryID=2&CurRec=2&recid=&filename=YLSX201510031&dbname=CJFDLAST2015&dbcode=CJFQ&pr=&urlid=&yx=&uid=WEEvREcwSlJHSldRa1FiOXJWdGtheGlTb2J2d3JMd2tzci9ZNjFZcEZ2ZEE1b3VMVk4xY2lHMlBVdjlUSm1EeElRPT0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MjI2NDg3RGgxVDNxVHJXTTFGckNVUkx5ZlkrWnFGaWpnVUxyS1BDSFlkckc0SDlUTnI0OUdaWVI4ZVgxTHV4WVM=
+在研究领域，也有一些基于光学字符识别的应用\citep{SongWan, HongfengLi, TikunHu}，这些应用也是将名片识别、车牌识别、档案识别等问题转化为光学字符识别问题，然后或自行实现简单的OCR分类器，或采用开源OCR引擎，来搭建系统，这些工作中，针对医学档案的并不多\citep{MinghuaXiang}，且准确率也得不到保障，从整体完成度来看，其学术探索意味大于实际使用。
 
 \section{本文主要工作}
 本工作旨在开发一个基于中文字符识别的医学档案生成与自动归类系统，具体来说，通过针对指定病历结构的版面分析，得到结构简单明确的包含文字的图片，再加上数据预处理、开源OCR引擎Tesseract的引入和优化、病历数据矫正分类归档等，最终实现了比较精确的医学档案生成和自动归档，识别率能达到90\%以上，有较高的实用价值。同时，文章从系统的架构设计到方案选取，再到具体实现，都有着比较详尽的阐述，这对类似的应用研究与开发提供了一个参考。
