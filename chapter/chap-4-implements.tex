@@ -14,6 +14,75 @@
 OpenCV（Open Source Computer Vision）是一个旨在完成实时机器视觉（Real-time Computer Vision）的函数库，最早是由英特尔研究中心开发，后被Will Garage接手，现在是由Itseez团队负责维护，是一个跨平台的免费开源图像处理库\citep{wiki:OpenCV}。OpenCV最早于2000年发行，目前仍在更新和维护，最新的稳定版是于2015年12月发布的OpenCV 3.1更新。它的代码由C/C++写就，同时提供了Python、Java以及Matlab等语言的接口\citep{wiki:OpenCV}。自其发布后的15年来，OpenCV一直以它良好的性能和高度的稳定性著称，是使用最为广泛的图像处理库。这也意味着它有着大量的用户测试经验和成熟的社区支持，这无疑为我们解决项目中的棘手问题提供了基础保障，具体来说，本系统的数据加载模块、版面分析模块、预处理模块都需要用到OpenCV提供的函数方法支持，我们也将在后面的模块详细介绍中，体会到OpenCV的强大功能。
 
 \subsubsection{环境部署}
+OpenCV是有很好的多平台支持（Windows，Linux，Mac等），环境的部署也比较简单，这里我们仅以Windows平台下Visual Studio 2013的opencv配置使用为例，做一个部署步骤的简要展示：
+\begin{itemize}
+  \item 从\href{http://opencv.org/}{OpenCV官方主页}下载最新的OpenCV 3.1安装包，解压安装包完成安装。并将OpenCV加入系统环境变量。
+  \item 新建一个Visual Studio C++工程，在工程配置属性中的“包含目录”中添加OpenCV的include文件夹，\autoref{OpenCV-test.cpp}
+\end{itemize}
+
+\begin{Codex}[label=OpenCV-test.cpp, numbers=left]
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <iostream>
+using namespace cv;
+int main(void)
+{
+  Mat img = imread("example.jpg", 0);
+  imshow("example", img);
+  waitKey();
+  return 0;
+}
+\end{Codex}
+
+\iffalse
+%这段代码利用tabular 和 minipage 实现了，“左代码，右图片”的排版
+\begin{minipage}{\textwidth}
+
+\begin{minipage}{0.4\textwidth}
+\begin{Codex}[label=a.cpp, numbers=left]
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <iostream>
+using namespace cv;
+int main(void)
+{
+  Mat img = imread("example.jpg", 0);
+  imshow("example", img);
+  waitKey();
+  return 0;
+}
+\end{Codex}
+\end{minipage}
+
+\hfill\begin{minipage}{0.4\textwidth}
+    \includegraphics[width=\textwidth]{download}
+\end{minipage}
+\end{minipage}
+
+
+\begin{tabular}{cc}
+  \raisebox{-.1cm}{\begin{minipage}{.5\textwidth}
+    \begin{Codex}[label=a.cpp, numbers=left]
+      %#include "opencv2/highgui/highgui.hpp"
+      %#include "opencv2/imgproc/imgproc.hpp"
+      %#include <iostream>
+      using namespace cv;
+      using namespace std;
+      int main(void)
+      %{
+          Mat img = imread("example.jpg", 0);
+          imshow("example", img);
+          waitKey();
+          return 0;
+    %  }
+    \end{Codex}
+  \end{minipage}} &
+  \begin{minipage}{.5\textwidth}
+    \includegraphics[width=\textwidth]{download}
+  \end{minipage}
+\end{tabular}
+\fi
+
 
 
 \section{数据加载模块}  %500字
