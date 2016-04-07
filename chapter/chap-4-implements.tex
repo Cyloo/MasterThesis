@@ -58,10 +58,32 @@ int main(void)
 
 Tesseract OCR引擎是一款能运行在多系统全平台（Windows，Linux，Mac，IOS，Android）的免费开源OCR引擎，最早由惠普公司Hewlett Packard实验室的工程师在1985年到1994年间开发和维护，并于2005年开放源代码，2006年之后由谷歌公司接手开发和维护\citep{wiki:Tesseract}。
 
-在1995年，Tesseract在识别准确率上是排名前三的OCR引擎，最早的版本只支持英文，之后逐步添加多语言的支持，其中就包括中文。准确性较高、支持多语言加之免费开源，使得Tesseract在这些年，广受赞誉，是公认最好的开源OCR引擎，读者可访问\href{https://github.com/tesseract-ocr/tesseract}{Tesseract的GitHub主页}来获取最新的源代码。同时，Tesseract的源码是由C/C++编写，与同样是C/C++编写的OpenCV图像处理库能够很好的兼容，事实上，Tesseract也开发了专门针对OpenCV的API接口，提供了丰富的支持。
+在1995年，Tesseract在识别准确率上是排名前三的OCR引擎，最早的版本只支持英文，之后逐步添加多语言的支持，其中就包括中文。准确性较高、支持多语言加之免费开源，使得Tesseract在这些年，广受赞誉，是公认最好的开源OCR引擎，读者可访问\href{https://github.com/tesseract-ocr/tesseract}{Tesseract的GitHub主页}来获取最新的源代码。同时，Tesseract的源码是由C/C++编写，与同样是C/C++编写的OpenCV图像处理库能够很好的兼容，事实上，Tesseract也开发了专门针对OpenCV的API接口，提供了丰富的支持。综上，系统决定采用Tesseract作为字符识别的解决方案。
 
 \subsubsection{环境部署}
-Tesseract支持多平台（Windows，Linux，Mac）开发
+Tesseract支持多平台（Windows，Linux，Mac）使用和开发，如果只是简单使用tesseract，可以下载安装包安装Tesseract的可执行程序，如果需要基于Tesseract进行二次开发，则需要编译它的源代码，显然，我们的需求属于后者。接下来本文以Windows平台下Visual Studio 2013的Tesseract编译为例，做一个简要的环境部署展示：
+\begin{itemize}
+	\item 安装版本控制软件Git\footnote{更多相关信息可访问Git官方网站：https://git-scm.com/}。
+	\item 在电脑中建立tesseract-build文件夹，在该文件夹下打开CMD控制台程序，并分别运行：
+	\begin{Code}[numbers=left]
+git clone git://github.com/charlesw/tesseract-vs2012.git
+git clone git://github.com/tesseract-ocr/tesseract.git
+	\end{Code}
+	\item 打开VS 2013 Developer Command Prompt，然后输入命令：
+	\begin{Code}[numbers=left]
+msbuild "${tesseract-build}\tesseract-vs2012\build.proj"
+	\end{Code}
+	其中\$\{tesseract-build\}表示tesseract-build这个文件夹在电脑中的绝对路径。
+	\item 将vs2013+64bit\_support.batch文件拷贝到tesseract-build文件夹下，然后进入到tesseract文件夹，执行以下命令：
+	\begin{Code}[numbers=left]
+git checkout -b 3.04-vs2013 3.04.00
+git am --signoff ../vs2013+64bit_support.patch
+	\end{Code}
+	\item 将tesseract-build\\tesseract-vs2012\\release目录下的所有文件拷贝到tesseract-build目录下。
+	\item 用VS2013打开tesseract-build\\tesseract\\vs2013下的tesseract.sln工程，开始编译，如果编译正常通过，就说明环境已经配置完成。
+\end{itemize}
+
+上面的只是一个配置过程的简述，不同平台、不同版本之间的配置方式有着比较明显的差异，需结合自身的情况，选取对应的配置部署流程，这里不再详述。
 
 \section{数据加载模块}  %500字
 可添加简单的容错处理
