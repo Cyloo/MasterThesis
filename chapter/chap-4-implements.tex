@@ -79,8 +79,8 @@ msbuild "${tesseract-build}\tesseract-vs2012\build.proj"
 git checkout -b 3.04-vs2013 3.04.00
 git am --signoff ../vs2013+64bit_support.patch
 	\end{Code}
-	\item 将tesseract-build\\tesseract-vs2012\\release目录下的所有文件拷贝到tesseract-build目录下。
-	\item 用VS2013打开tesseract-build\\tesseract\\vs2013下的tesseract.sln工程，开始编译，如果编译正常通过，就说明环境已经配置完成。
+	\item 将tesseract-build$\backslash$tesseract-vs2012$\backslash$release目录下的所有文件拷贝到tesseract-build目录下。
+	\item 用VS2013打开tesseract-build$\backslash$tesseract$\backslash$vs2013下的tesseract.sln工程，开始编译，如果编译正常通过，就说明环境已经配置完成。
 \end{itemize}
 
 上面的只是一个配置过程的简述，不同平台、不同版本之间的配置方式有着比较明显的差异，需结合自身的情况，选取对应的配置部署流程，这里不再详述。
@@ -89,13 +89,19 @@ git am --signoff ../vs2013+64bit_support.patch
 可添加简单的容错处理
 
 \section{版面分析模块}  % 3000字
-版面分析（Document Layout Analysis），是指在含有文本的图像中识别出目标区域（Regions of Interest，ROI）的过程。一个文字识别系统需要将文字从非文字的区域中划分出来，同时保持文本的相对顺序\citep{baird1992anatomy}。在一个文件中检测和标记出文本区域和其他非文本区域的过程叫做几何学版面分析（Geometric Layout Analysis）\citep{cattoni1998geometric}。但是不同的文本区域在文档中代表的含义并不相同，例如有些文本是文档的标题，有些是文档的注释，有些是文档的主体等等，具体到病历档案归类系统中，就是文本块所属的字段是各不相同的，这种识别文字在文档中的含义的过程叫做逻辑学版面分析（Logical Layout Analysis）\citep{haralick1994document}。在真实的应用场景中，由于实际文档的多样性，复杂性，因此，目前还没有一个固定的，最优的切割模型，需要我们根据实际问题和需求，有针对性的设计版面分析方法。
-在\autoref{ssec:framework-segmentation-analysis}中我们已经提到，系统的版面分析模块非常重要，需要完成以下三大功能：
+版面分析（Document Layout Analysis），是指在含有文本的图像中识别出目标区域（Regions of Interest，ROI）的过程。一个文字识别系统需要将文字从非文字的区域中划分出来，同时保持文本的相对顺序\citep{baird1992anatomy}。在一个文件中检测和标记出文本区域和其他非文本区域的过程叫做几何学版面分析（Geometric Layout Analysis）\citep{cattoni1998geometric}。但是不同的文本区域在文档中代表的含义并不相同，例如有些文本是文档的标题，有些是文档的注释，有些是文档的主体等等，具体到病历档案归类系统中，就是文本块所属的字段是各不相同的，这种识别文字在文档中的含义的过程叫做逻辑学版面分析（Logical Layout Analysis）\citep{haralick1994document}。
+
+在真实的应用场景中，由于实际文档的多样性，复杂性，因此，目前还没有一个固定的，最优的切割模型，需要我们根据实际问题和需求，有针对性的设计版面分析方法。在\autoref{ssec:framework-segmentation-analysis}中我们已经提到，系统的版面分析模块非常重要，需要完成以下三大功能：
 \begin{itemize}
 	\item 对病历图片进行二次分类；
 	\item 剔除图片中的干扰信息，获得病历数据主体；
 	\item 剔除主体内容中的空白，提取出各个字段。
 \end{itemize}
+这三个功能我们可以简单归纳为图片分类、保留主体、提取字段。接下来，我们就来分别讨论这三个功能如何实现。
+
+\subsection{图片分类}
+
+
 
 \section{预处理模块}     % 1000字
 \subsection{方案选取}
