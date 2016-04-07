@@ -89,7 +89,7 @@ git am --signoff ../vs2013+64bit_support.patch
 可添加简单的容错处理
 
 \section{版面分析模块}  % 3000字
-文档版面分析（Document Layout Analysis），是指在含有文本的图像中识别出目标区域（Regions of Interest，ROI）的过程。一个文字识别系统需要将文字从非文字的区域中划分出来，同时保持文本的相对顺序\citep{baird1992anatomy}。在一个文件中检测和标记出文本区域和其他非文本区域的过程叫做几何学版面分析（Geometric Layout Analysis）\citep{cattoni1998geometric}。但是不同的文本区域在文档中代表的含义并不相同，例如有些文本是文档的标题，有些是文档的注释，有些是文档的主体等等，具体到病历档案归类系统中，就是文本块所属的字段是各不相同的，这种识别文字在文档中的含义的过程叫做逻辑学版面分析（Logical Layout Analysis）\citep{haralick1994document}。
+文档版面分析（Document Layout Analysis），是指在含有文本的图像中识别出感兴趣区域（Regions of Interest，ROI）的过程。一个文字识别系统需要将文字从非文字的区域中划分出来，同时保持文本的相对顺序\citep{baird1992anatomy}。在一个文件中检测和标记出文本区域和其他非文本区域的过程叫做几何学版面分析（Geometric Layout Analysis）\citep{cattoni1998geometric}。但是不同的文本区域在文档中代表的含义并不相同，例如有些文本是文档的标题，有些是文档的注释，有些是文档的主体等等，具体到病历档案归类系统中，就是文本块所属的字段是各不相同的，这种识别文字在文档中的含义的过程叫做逻辑学版面分析（Logical Layout Analysis）\citep{haralick1994document}。
 
 （几何学）版面分析算法总体上可以分为三类\citep{mao2003document}：
 \begin{itemize}
@@ -104,10 +104,46 @@ git am --signoff ../vs2013+64bit_support.patch
 	\item 剔除图片中的干扰信息，获得病历数据主体；
 	\item 剔除主体内容中的空白，提取出各个字段。
 \end{itemize}
-这三个功能我们可以简单归纳为图片分类、主体保留、字段提取。接下来，我们分别讨论这三个功能如何实现。
+这三个功能我们可以简单归纳为图片分类、主体保留、字段提取。这三者的顺序是从逻辑上出发来区分的，在实际代码实现中，我们是先实现了主体保留，此时再对图片分类，最后做字段提取的工作。接下来，我们分别讨论这三个功能如何实现。
+
+\subsection{主体保留}
 
 \subsection{图片分类}
-fefew
+在\autoref{ssec:framework-segmentation-analysis}中，我们已经提到每个病人对应着大约7到10张图片，这些图片的内容互不重复，加起来构成了完整的病人诊疗信息，图片之间的版式是各不相同的，如\autoref{pic:different-layout}所示，三张图片都属于同一个病人的病历数据，但是主体内容的版式各不相同，\autoref{fig:sub-input-image-1}中主要记录的是病人的基本信息，如姓名、性别等，\autoref{fig:sub-input-image-3}中记录的则是病人详细的病情数据，而\autoref{fig:sub-input-image-2}则介于两者之间。假设病人的病历图片只有这三种样式，那么当有一张图片输入时，应该如何判断这张图片属于哪个样式呢？这就涉及到图片相似度（image similarity measure）度量的问题了。
+
+\begin{figure}[htbp]
+  \centering
+  \subfloat[]{
+  \label{fig:sub-input-image-1}
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{input-image-1}
+  \end{minipage}
+  }
+  \subfloat[]{
+  \label{fig:sub-input-image-2}
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{input-image-2}
+  \end{minipage}
+  }
+  \subfloat[]{
+  \label{fig:sub-input-image-3}
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{input-image-3}
+  \end{minipage}
+  }
+  \caption{病历图片的几种版式}
+  \label{pic:different-layout}
+\end{figure}
+
+相似性度量（Similarity Measure）\citep{lin1998information}，或者距离度量（Distance Meature），是一个用来定义两个物体相似性或者距离的实值函数\citep{singhal2001modern}，常见的相似性度量函数有欧几里得距离（Euclidean distance）\citep{wiki:Euclidean-distance}、余弦距离（Cosine Distance）\citep{wiki:Cosine-distance}、机器学习中的核函数（Kernel Functions）\citep{hofmann2008kernel}等等，这些相似性度量在数据挖掘领域有着广泛的应用\citep{tan2006introduction}。图片相似度度量，是相似性度量的一个特例，当然，版式作为图片信息的一个抽象，它的相似度度量是图片相似度度量的一个子集。一般来说，图像相似性度量分为两个部分\citep{goldberger2003efficient}：
+\begin{itemize}
+  \item 图像表示（Image Representation），既然相似性度量是一个实值函数，那么图片数据需要转换成某种数值的表示形式才能进行度量，比较常见的表示方法是将图片中的每个像素分成红绿蓝三个维度的0-255的整数值进行存储，而灰度、二值等都是不同的图片表示方法。
+  \item 相似度定义与计算，定义一个合适的相似度度量指标，计算图片间的相似度。这个是与问题相关的，不同问题适用的相似度度量也不一样。
+\end{itemize}
+具体到病历图片版面相似性度量，由于我们
 
 \section{预处理模块}     % 1000字
 \subsection{方案选取}
