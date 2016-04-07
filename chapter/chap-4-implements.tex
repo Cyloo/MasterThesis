@@ -17,13 +17,13 @@ OpenCV（Open Source Computer Vision）是一个旨在完成实时机器视觉�
 OpenCV是有很好的多平台支持（Windows，Linux，Mac等），环境的部署也比较简单，这里我们仅以Windows平台下Visual Studio 2013的opencv配置使用为例，做一个部署步骤的简要展示：
 \begin{itemize}
   \item 从\href{http://opencv.org/}{OpenCV官方主页}下载最新的OpenCV 3.1安装包，解压安装包完成安装。并将OpenCV加入系统环境变量。
-  \item 新建一个Visual Studio C++工程，在工程配置属性中的“包含目录”中添加OpenCV的include文件夹，\autoref{OpenCV-test.cpp}
+  \item 新建一个Visual Studio C++工程，在工程配置属性中的“包含目录”中添加OpenCV的include文件夹，在“库目录”中加入OpenCV的lib文件夹，在“链接器”的附加依赖中添加opencvworld310d.lib和opencvworld310.lib（分别对应debug和release编译选项）。
+  \item 在工程中添加如下测试代码OpenCV-test.cpp（代码见下方，功能是展示示例图片），编译运行，如果编译通过，并且程序正确开辟“example”窗口并显示示例图片，说明OpenCV的环境就配置成功了。
 \end{itemize}
 
 \begin{Codex}[label=OpenCV-test.cpp, numbers=left]
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
 #include <iostream>
+#include "opencv2/highgui/highgui.hpp"
 using namespace cv;
 int main(void)
 {
@@ -34,54 +34,14 @@ int main(void)
 }
 \end{Codex}
 
-\iffalse
-%这段代码利用tabular 和 minipage 实现了，“左代码，右图片”的排版
-\begin{minipage}{\textwidth}
+上面只是简述了OpenCV的部署步骤，具体到不同的平台和软件版本，部署时会有一些小的差异，读者可结合自己的情况，从网络上找到对应的详细部署指南，这里就不再赘述了。
 
-\begin{minipage}{0.4\textwidth}
-\begin{Codex}[label=a.cpp, numbers=left]
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
-#include <iostream>
-using namespace cv;
-int main(void)
-{
-  Mat img = imread("example.jpg", 0);
-  imshow("example", img);
-  waitKey();
-  return 0;
-}
-\end{Codex}
-\end{minipage}
+\subsection{字符识别}
+\subsubsection{方案选取}
 
-\hfill\begin{minipage}{0.4\textwidth}
-    \includegraphics[width=\textwidth]{download}
-\end{minipage}
-\end{minipage}
+\subsubsection{环境部署}
 
 
-\begin{tabular}{cc}
-  \raisebox{-.1cm}{\begin{minipage}{.5\textwidth}
-    \begin{Codex}[label=a.cpp, numbers=left]
-      %#include "opencv2/highgui/highgui.hpp"
-      %#include "opencv2/imgproc/imgproc.hpp"
-      %#include <iostream>
-      using namespace cv;
-      using namespace std;
-      int main(void)
-      %{
-          Mat img = imread("example.jpg", 0);
-          imshow("example", img);
-          waitKey();
-          return 0;
-    %  }
-    \end{Codex}
-  \end{minipage}} &
-  \begin{minipage}{.5\textwidth}
-    \includegraphics[width=\textwidth]{download}
-  \end{minipage}
-\end{tabular}
-\fi
 
 
 
