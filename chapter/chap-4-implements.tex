@@ -89,7 +89,14 @@ git am --signoff ../vs2013+64bit_support.patch
 可添加简单的容错处理
 
 \section{版面分析模块}  % 3000字
-版面分析（Document Layout Analysis），是指在含有文本的图像中识别出目标区域（Regions of Interest，ROI）的过程。一个文字识别系统需要将文字从非文字的区域中划分出来，同时保持文本的相对顺序\citep{baird1992anatomy}。在一个文件中检测和标记出文本区域和其他非文本区域的过程叫做几何学版面分析（Geometric Layout Analysis）\citep{cattoni1998geometric}。但是不同的文本区域在文档中代表的含义并不相同，例如有些文本是文档的标题，有些是文档的注释，有些是文档的主体等等，具体到病历档案归类系统中，就是文本块所属的字段是各不相同的，这种识别文字在文档中的含义的过程叫做逻辑学版面分析（Logical Layout Analysis）\citep{haralick1994document}。
+文档版面分析（Document Layout Analysis），是指在含有文本的图像中识别出目标区域（Regions of Interest，ROI）的过程。一个文字识别系统需要将文字从非文字的区域中划分出来，同时保持文本的相对顺序\citep{baird1992anatomy}。在一个文件中检测和标记出文本区域和其他非文本区域的过程叫做几何学版面分析（Geometric Layout Analysis）\citep{cattoni1998geometric}。但是不同的文本区域在文档中代表的含义并不相同，例如有些文本是文档的标题，有些是文档的注释，有些是文档的主体等等，具体到病历档案归类系统中，就是文本块所属的字段是各不相同的，这种识别文字在文档中的含义的过程叫做逻辑学版面分析（Logical Layout Analysis）\citep{haralick1994document}。
+
+（几何学）版面分析算法总体上可以分为三类\citep{mao2003document}：
+\begin{itemize}
+	\item 自顶向下方法，算法从整张图片开始，迭代地将图片不断分割成更小的区域，直到程序达到某种终止条件时停止。它的优点是操作简单、速度较快，但是难以适应比较复杂的版面\citep{nagy1992prototype}\citep{baird1990image}。
+	\item 自底向上方法，与自顶向下的方法相反，算法从每一个图片像素开始，根据一定的聚即规则，逐渐聚集相邻的区域形成单词，语句和段落。它的优点是能够适应比较复杂的版面，缺点是速度比较慢，难以确定一个比较好的聚集规则\citep{o1993document}\citep{kise1998segmentation}。
+	\item 混合型方法，它可以被看做是自顶向下和自底向上这两种方法的混合\citep{pavlidis1992page}。
+\end{itemize}
 
 在真实的应用场景中，由于实际文档的多样性，复杂性，因此，目前还没有一个固定的，最优的切割模型，需要我们根据实际问题和需求，有针对性的设计版面分析方法。在\autoref{ssec:framework-segmentation-analysis}中我们已经提到，系统的版面分析模块非常重要，需要完成以下三大功能：
 \begin{itemize}
@@ -97,7 +104,7 @@ git am --signoff ../vs2013+64bit_support.patch
 	\item 剔除图片中的干扰信息，获得病历数据主体；
 	\item 剔除主体内容中的空白，提取出各个字段。
 \end{itemize}
-这三个功能我们可以简单归纳为图片分类、保留主体、提取字段。接下来，我们就来分别讨论这三个功能如何实现。
+这三个功能我们可以简单归纳为图片分类、主体保留、字段提取。接下来，我们分别讨论这三个功能如何实现。
 
 \subsection{图片分类}
 
