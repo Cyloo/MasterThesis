@@ -108,6 +108,43 @@ git am --signoff ../vs2013+64bit_support.patch
 
 \subsection{主体保留}
 
+\subsubsection*{图片裁剪}
+
+\begin{lstlisting}[language=C]
+int main(int argc, char ** argv)
+{
+printf("Hello world!\n");
+return 0;
+}
+\end{lstlisting}
+
+\begin{Codex}[label=Cut,numbers=left]
+Mat MatchingMethod(Mat src, Mat _template, int template_type)
+{
+	// template_type option:  0 -> title, 1 -> sidebar
+	Mat result;
+	int match_method = CV_TM_SQDIFF_NORMED;
+	Mat img_display;
+	src.copyTo(img_display);
+	int result_cols = src.cols - _template.cols + 1;
+	int result_rows = src.rows - _template.rows + 1;
+	result.create(result_rows, result_cols, CV_32FC1);
+	matchTemplate(src, _template, result, match_method);
+	normalize(result, result, 0, 1, NORM_MINMAX, -1, Mat());
+	double minVal; double maxVal; Point minLoc; Point maxLoc;
+	Point matchLoc;
+	minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
+	matchLoc = minLoc;
+	Mat roi;
+	if (template_type)
+	roi = src(Rect(matchLoc.x + _template.cols, matchLoc.y, src.cols - matchLoc.x - _template.cols, _template.rows));
+	else
+	roi = src(Rect(0, matchLoc.y + _template.rows, matchLoc.x + _template.cols, src.rows - matchLoc.y - _template.rows));
+	return roi;
+}
+\end{Codex}
+
+
 \subsection{图片分类}
 在\autoref{ssec:framework-segmentation-analysis}中，我们已经提到每个病人对应着大约7到10张图片，这些图片的内容互不重复，加起来构成了完整的病人诊疗信息，图片之间的版式是各不相同的，如\autoref{pic:different-layout}所示，三张图片都属于同一个病人的病历数据，但是主体内容的版式各不相同，\autoref{fig:sub-input-image-1}中主要记录的是病人的基本信息，如姓名、性别等，\autoref{fig:sub-input-image-3}中记录的则是病人详细的病情数据，而\autoref{fig:sub-input-image-2}则介于两者之间。假设病人的病历图片只有这三种样式，那么当有一张图片输入时，应该如何判断这张图片属于哪个样式呢？这就涉及到图片相似度（image similarity measure）度量的问题了。
 
