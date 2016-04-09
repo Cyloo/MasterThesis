@@ -121,7 +121,6 @@ cut = origin( Rect(x0, y0, width, height) );
 \subsubsection*{模板匹配}
 需要注意的是，在确定的病历系统中，其系统信息和侧边栏导航的内容和位置是相对固定的，我们可以根据这一点，利用模板匹配的方式，确定系统信息栏和侧边导航栏的位置，并进行裁剪。
 
-
 模板匹配（Template Matching）\citep{template-matching}，是一项在原始图片中寻找匹配模板图片的小区域的技术。在OpenCV中，提供了模板匹配的函数
 \begin{Code}
 void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)
@@ -136,16 +135,16 @@ R(x,y)=\sum_{x^{'},y^{'}}(T(x^{'},y^{'})-I(x+x^{'},y+y^{'}))^2
 \begin{equation} \label{eq:correlation}
 R(x,y)=\sum_{x^{'},y^{'}}(T(x^{'},y^{'})\cdot I(x+x^{'},y+y^{'}))
 \end{equation}
-其中，$T(x^{'},y^{'})$表示模板图像中的点，$I(x+x^{'},y+y^{'})$表示原始图像滑动窗口中对应的点。平方差匹配算子衡量的是两者的差别，所以这个值越低，说明匹配度越高，而相关屁屁额算子衡量的是两者的相关性，所以这个值越高，说明匹配度越高。
+其中，$T(x^{'},y^{'})$表示模板图像中的点，$I(x+x^{'},y+y^{'})$表示原始图像滑动窗口中对应的点。平方差匹配算子衡量的是两者的差别，所以这个值越低，说明匹配度越高，而相关匹配算子衡量的是两者的相关性，所以这个值越高，说明匹配度越高。
 
-\begin{lstlisting}[language=C]
-int main(int argc, char ** argv)
-{
-printf("Hello world!\n");
-return 0;
-}
-\end{lstlisting}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\textwidth]{title-template}
+	\caption{系统信息栏模板}
+	\label{pic:title-template}
+\end{figure}
 
+对于病历图片中的系统信息栏，我们可以通过截取原图中系统信息栏的部分保存下来，作为模板，如\autoref{pic:title-template}所示。然后运用模板匹配算法，剪裁掉原图中上方系统信息栏部分，代码如下：（其中算子采用平方差算子，输入参数src代表原图，\_template代表模板，template\_type为模板类型，返回值roi为截掉模板之后的图像。）
 \begin{Codex}[label=Cut,numbers=left]
 Mat MatchingMethod(Mat src, Mat _template, int template_type)
 {
@@ -171,6 +170,43 @@ Mat MatchingMethod(Mat src, Mat _template, int template_type)
 	return roi;
 }
 \end{Codex}
+
+去掉系统信息栏之后的图像如\autoref{pic:template-cut-title}所示，接着我们采用同样的方法，也可去掉侧边的导航栏，最终得到\autoref{pic:template-cut-title}所示，可以看到，病历的主体已经被完整的剥离出来，至此，主体保留的工作就完成了。
+
+\begin{figure}[htbp]
+  \centering
+  \subfloat[]{
+  \label{pic:template-cut-origin}
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{input-image-1}
+  \end{minipage}
+  }
+  \subfloat[]{
+  \label{pic:template-cut-title}
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{cut-title}
+  \end{minipage}
+  }
+  \subfloat[]{
+  \label{pic:template-cut-sidebar}
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{cut-sidebar}
+  \end{minipage}
+  }
+  \caption{病历主体内容截取}
+  \label{pic:different-layout}
+\end{figure}
+
+\begin{lstlisting}[language=C]
+int main(int argc, char ** argv)
+{
+printf("Hello world!\n");
+return 0;
+}
+\end{lstlisting}
 
 
 \subsection{图片分类}
