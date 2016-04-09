@@ -107,8 +107,36 @@ git am --signoff ../vs2013+64bit_support.patch
 这三个功能我们可以简单归纳为图片分类、主体保留、字段提取。这三者的顺序是从逻辑上出发来区分的，在实际代码实现中，我们是先实现了主体保留，此时再对图片分类，最后做字段提取的工作。接下来，我们分别讨论这三个功能如何实现。
 
 \subsection{主体保留}
+图片中除了我们需要的病历主体信息以外，一般还会有冗余的干扰信息，以\autoref{pic:input-image-1}为例，图片的中间部分是病人病历数据的主体，而图片上部则是一些电子病历系统的系统信息，左侧则是一个侧边栏导航，这些都是与病历无关的，我们需要将其剔除，保留主体，这里需要用到图片的裁剪。
 
-\subsubsection*{图片裁剪}
+\subsubsection*{OpenCV中矩形框裁剪}
+在OpenCV中，可以很方便的根据矩形框来裁剪，假如原始图片已转换为Mat格式\footnote{Mat是OpenCV 2.x中图片加载以后的格式}，名字为origin，我们需要产生的裁剪图片为cut，那么裁剪的代码为：
+\begin{Code}
+cut = origin( Rect(x0, y0, width, height) );
+\end{Code}
+其中$(x_0,y_0)$表示裁剪区域的左上角在原图中的位置，width和height则分别表示裁剪区域的宽度和高度。
+
+现在我们知道用OpenCV裁剪矩形图片了，但是对于\autoref{pic:input-image-1}这样的数据，我们怎么确定$(x_0,y_0)$和width、height呢？
+
+\subsubsection*{模板匹配}
+需要注意的是，在确定的病历系统中，其系统信息和侧边栏导航的内容和位置是相对固定的，我们可以根据这一点，利用模板匹配的方式，确定系统信息栏和侧边导航栏的位置，并进行裁剪。
+
+
+模板匹配（Template Matching）\citep{template-matching}，是一项在原始图片中寻找匹配模板图片的小区域的技术。在OpenCV中，提供了模板匹配的函数
+\begin{Code}
+void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)
+\end{Code}
+其中image表示原始图像，templ表示模板图像，result为结果矩阵，method为匹配算子类型。具体匹配过程为模板图像在原始图像中滑动，根据不同的匹配算子，计算重叠区域的匹配度，当滑动过整个原始图像区域后，返回匹配度最高的子图像信息。
+
+OpenCV提供了6种默认的匹配算子，最常见的是平方差匹配算子（\autoref{eq:square}）和相关匹配算子（\autoref{eq:correlation}）：
+\begin{equation} \label{eq:square}
+R(x,y)=\sum_{x^{'},y^{'}}(T(x^{'},y^{'})-I(x+x^{'},y+y^{'}))^2
+\end{equation}
+
+\begin{equation} \label{eq:correlation}
+R(x,y)=\sum_{x^{'},y^{'}}(T(x^{'},y^{'})\cdot I(x+x^{'},y+y^{'}))
+\end{equation}
+其中，$T(x^{'},y^{'})$表示模板图像中的点，$I(x+x^{'},y+y^{'})$表示原始图像滑动窗口中对应的点。平方差匹配算子衡量的是两者的差别，所以这个值越低，说明匹配度越高，而相关屁屁额算子衡量的是两者的相关性，所以这个值越高，说明匹配度越高。
 
 \begin{lstlisting}[language=C]
 int main(int argc, char ** argv)
