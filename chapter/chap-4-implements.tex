@@ -247,13 +247,13 @@ return 0;
 
 \subsubsection*{灰度化}
 \label{sub:灰度化}
-一张彩色图像在计算机中是由若干个像素点的形式存在，像素点的多少取决于图像的分辨率PPI（Pixel Per Inch），而每个像素点最常见的表示形式是RGB（Red，Green，Blue，即红。绿。蓝）三原色，三原色的不同组合比例能表示丰富的色彩。而灰度图则是另外一种表示形式，它只保存了每个像素的亮度（Intensity）信息，将RGB图像转换为灰度图需满足公式\label{eq:RGBtoGray}：
+一张彩色图像在计算机中是由若干个像素点的形式存在，像素点的多少取决于图像的分辨率PPI（Pixel Per Inch），而每个像素点最常见的表示形式是RGB（Red，Green，Blue，即红。绿。蓝）三原色，三原色的不同组合比例能表示丰富的色彩。而灰度图则是另外一种表示形式，它只保存了每个像素的亮度（Intensity）信息，将RGB图像转换为灰度图需满足\autoref{eq:RGBtoGray}：
 \begin{equation} \label{eq:RGBtoGray}
-P(x,y) = \alpha R(x,y) + \beta G(x,y) + \gamma B(x,y) \\
-where \\
-\alpha + \beta + \gamma = 1
+		\begin{split}
+& P(x,y) = \alpha R(x,y) + \beta G(x,y) + \gamma B(x,y),  \\
+& where \quad \alpha,\beta,\gamma > 0,\alpha + \beta + \gamma = 1
+		\end{split}
 \end{equation}
-这个多行公式没有效果
 
 其中，$P(x,y)$表示像素点的灰度值，$R(x,y),G(x,y),B(x,y)$表示像素点的三原色值，
 
