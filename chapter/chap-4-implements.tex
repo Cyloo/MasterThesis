@@ -327,7 +327,10 @@ void adaptiveThreshold(InputArray src, OutputArray dst, double maxValue, int ada
 \end{figure}
 
 \subsubsection*{图像的膨胀和腐蚀}
+图像的膨胀和腐蚀是两种常见的图像形态学操作（Morphological Operations），形态学操作简而言之，就是根据一个结构化元素（Structuring Element）对输入图片进行一系列基于外形的图像处理操作，得到输出图片。图像的膨胀和腐蚀在很多方面都有应用，例如去噪、个体元素提取或连接等。
 
+膨胀（Dilation)，可以被看做一个是基于某个核（Kernel）$B$的卷积（convoluting）操作，这个核$B$可以是任意的形状和大小，一般来说是方形或者是原型，
+核$B$一般有一个预先定义好的锚点（anchor point），
 
 \section{预处理模块}     % 1000字
 \subsection{方案选取}
