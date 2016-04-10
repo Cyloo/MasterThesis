@@ -364,12 +364,117 @@ void adaptiveThreshold(InputArray src, OutputArray dst, double maxValue, int ada
   \label{pic:dangan}
 \end{figure}
 
-对图片的灰度化、二值化、膨胀和腐蚀操作有所了解以后，我们就可以利用这些图像处理方法，来进行图片分类任务了。前面我们提到我们是通过比较图片与三种版式图片的相似性来确定图片的版式，如
+对图片的灰度化、二值化、膨胀和腐蚀操作有所了解以后，我们就可以利用这些图像处理方法，来进行图片分类任务了。前面我们提到我们是通过比较图片与三种版式图片的相似性来确定图片的版式，如\autoref{pic:layout-comparison}中所示，\autoref{pic:bingli1-cut}、\autoref{pic:bingli2-cut}、\autoref{pic:bingli3-cut}分别是保留主体的模板版式，而\autoref{pic:new-bingli1-cut}则是需要确定版式的新图片，我们只需要确定新图片与三张模板版式图片哪张最接近，就可以确定新图片的版式了。以我们的肉眼判断，测试图片的版式与\autoref{pic:bingli1-cut}是最接近的，但是，对于计算机来说，并不是那么容易判断。
+\begin{figure}[htbp]
+  \centering
+  \subfloat[版式1]{
+  \label{pic:bingli1-cut}
+  \begin{minipage}[t]{0.23\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{cut_sidebar}
+  \end{minipage}
+  }
+	\hfill
+  \subfloat[版式2]{
+  \label{pic:bingli2-cut}
+  \begin{minipage}[t]{0.23\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{bingli2-cut}
+  \end{minipage}
+  }
+  \subfloat[版式3]{
+  \label{pic:bingli3-cut}
+  \begin{minipage}[t]{0.23\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{bingli3-cut}
+  \end{minipage}
+  }
+	\hfill
+  \subfloat[测试图]{
+  \label{pic:new-bingli1-cut}
+  \begin{minipage}[t]{0.23\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{new-bingli1-cut}
+  \end{minipage}
+  }
+	\vskip\baselineskip
+  \subfloat[变换后的版式1]{
+  \label{pic:bingli1-cut-eroded}
+  \begin{minipage}[t]{0.23\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{bingli1-cut-eroded}
+  \end{minipage}
+  }
+	\hfill
+  \subfloat[变换后的版式2]{
+  \label{pic:bingli2-cut-eroded}
+  \begin{minipage}[t]{0.23\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{bingli2-cut-eroded}
+  \end{minipage}
+  }
+  \subfloat[变换后的版式3]{
+  \label{pic:bingli3-cut-eroded}
+  \begin{minipage}[t]{0.23\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{bingli3-cut-eroded}
+  \end{minipage}
+  }
+	\hfill
+  \subfloat[变换后的测试图]{
+  \label{pic:new-bingli1-cut-eroded}
+  \begin{minipage}[t]{0.23\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{new-bingli1-cut-eroded}
+  \end{minipage}
+  }
+  \caption{测试图片与模板图片的比较}
+  \label{pic:layout-comparison}
+\end{figure}
+
+此时，这四张图片的信息比较复杂，字段中的文字实际上是判断版式的噪声，因此，我们将每张图片分别进行灰度化、二值化、腐蚀等转换操作，得到对应的\autoref{pic:bingli1-cut-eroded}、\autoref{pic:bingli2-cut-eroded}、\autoref{pic:bingli3-cut-eroded}、\autoref{pic:new-bingli1-cut-eroded}。经过转换后，图片都被二值化，即图片中的像素值只有0和1两种可能，0代表黑色，1代表白色。
+
+每张图片我们都可以看成是一个矩阵，矩阵中的每个值要么是0，要么是1，我们采用的相似性度量指标为两张图（即两个矩阵）的点乘，显然，点乘的结果越大，说明两个图片中对应像素同时为1的像素点越多，也就可以认为越相似，点乘结果如\autoref{tab:dot-multy}所示，测试图片与版式1的点乘结果最大，因此可以认为测试图片的版式就是版式1。
+\begin{table}
+	\tabcaption{测试图与版式图的点乘结果}
+	\label{tab:dot-multy}
+	\centering
+	\vspace{10pt}
+  \renewcommand\arraystretch{1.5}  %这两行代码用来调整表格高度
+	\begin{tabular}{|c||c|c|c|}
+		\hline
+		&版式1&版式2&版式3\\
+		\hline
+		点乘结果&$1.43\times 10^{11}$&$1.19\times 10^{11}$&$1.26\times 10^{11}$\\
+		\hline
+	\end{tabular}
+\end{table}
+
+但是我们可以看到，测试图片与各种版式的点乘结果间差距其实并不大，这样的判断指标显示不够有说服力，是什么原因造成点乘结果差距不明显呢？我们注意到，点乘结果主要计算的是对应像素同为1时的像素个数，即同时为白色的像素个数，而病历图片的大部分都被白色覆盖，导致点乘后，各个结果都比较接近，因此，我们可以将版式图片和测试图片的颜色都进行反转，即黑变白，白变黑，这样，点乘考量的就主要是图片中黑色相重叠的部分了。反转以后的点乘结果如\autoref{tab:dot-multy-reverse}所示，测试图片仍然是与版式1最接近，不过这一次，点乘结果间的差距更大了，这显然让我们更好做判断。
+
+\begin{table}
+	\tabcaption{测试图与版式图的反转点乘结果}
+	\label{tab:dot-multy-reverse}
+	\centering
+	\vspace{10pt}
+  \renewcommand\arraystretch{1.5}  %这两行代码用来调整表格高度
+	\begin{tabular}{|c||c|c|c|}
+		\hline
+		&版式1&版式2&版式3\\
+		\hline
+		反转点乘结果&$2.62\times 10^{10}$&$1.04\times 10^{10}$&$0.95\times 10^{10}$\\
+		\hline
+	\end{tabular}
+\end{table}
+
+至此，我们已经完成了一张图片与版式图片之间的匹配，找到了最接近的版式，这也就意味着我们的图片分类工作完成了。
+
+\subsection{字段提取}
+接下来是版面分析的最后一步，字段提取
 
 \section{预处理模块}     % 1000字
 
 \section{OCR模块}     % 6000字
-\subsection{方案选取}
 
 \section{字段解析模块}  %3000字
 当含有文本的图片数据经过OCR模块以后，会被转换为文本，这些文本需要进行一定的加工，才能得到我们想要的各字段数据。总体来说，原始的文本需要经过数据清洗、字段匹配、目标文本提取等步骤。我们也可以认为这是数据的“后处理”过程。
