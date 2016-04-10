@@ -254,8 +254,10 @@ return 0;
 & where \quad \alpha,\beta,\gamma > 0,\alpha + \beta + \gamma = 1
 		\end{split}
 \end{equation}
+其中，$P(x,y)$表示像素点的灰度值，$R(x,y),G(x,y),B(x,y)$表示像素点的三原色值，系数$\alpha,\beta,\gamma$的一个常见取值为$\alpha=0.299,\beta=0.587,\gamma=0.114$。从\autoref{eq:RGBtoGray}中我们可以知道，灰度转换实际上是从RGB三维到灰度一维的投影，这种转换会损失信息，并且是不可逆的。
 
-其中，$P(x,y)$表示像素点的灰度值，$R(x,y),G(x,y),B(x,y)$表示像素点的三原色值，
+\subsubsection*{二值化}
+\label{sub:二值化}
 
 \section{预处理模块}     % 1000字
 \subsection{方案选取}
