@@ -278,16 +278,56 @@ Mat MatchingMethod(Mat src, Mat _template, int template_type)
 	\end{cases}
 \end{equation}
 其中$x$表示像素点的灰度值（常见取值为$0-255$），$threshold$为二值化的阈值，当$x$大于阈值时，该像素点为白色，反之为黑色。OpenCV提供了两种二值化方法，分别是固定阈值方法和自适应阈值方法。
+
 固定阈值方法，即需要事先指定一个全局阈值，根据这个阈值对灰度图进行二值化，函数原型为
 \begin{Code}
 double threshold(InputArray src, OutputArray dst, double thresh, double maxval, int type)
 \end{Code}
+固定阈值方法虽然实现简单，但是阈值需要人工选取，很难保证效果，当阈值选的太大时，会产生很多噪声，淹没主体（见\autoref{lena_binary_130}），阈值选的太小时，又会丢失大量的细节（见\autoref{lena_binary_70}），因此这种方法在具体实施时并不推荐。
 
 自适应阈值方法，函数原型为
 \begin{Code}
 void adaptiveThreshold(InputArray src, OutputArray dst, double maxValue, int adaptiveMethod, int thresholdType, int blockSize, double C)
 \end{Code}
 它根据像素的邻域块的像素值分布来确定该像素位置上的二值化阈值。这样做的好处在于每个像素位置处的二值化阈值不是固定不变的，而是由其周围邻域像素的分布来决定的。亮度较高的图像区域的二值化阈值通常会较高，而亮度较低的图像区域的二值化阈值则会相适应地变小。不同亮度、对比度、纹理的局部图像区域将会拥有相对应的局部二值化阈值。常用的局部自适应阈值有：1）局部邻域块的均值；2）局部邻域块的高斯加权和。%这一段摘自http://blog.csdn.net/icvpr/article/details/8515596
+自适应阈值二值化效果见\autoref{lena_binary_adaptive}，图片即保证了主体的明确，没有很多噪声，又保留了大部分的细节。
+
+\begin{figure}[htbp]
+  \centering
+  \subfloat[]{
+  \label{pic:lena_binary_origin}
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{lena_grey}
+  \end{minipage}
+  }
+  \subfloat[]{
+  \label{pic:lena_binary_130}
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{lena_binary_130}
+  \end{minipage}
+  }
+  \subfloat[]{
+  \label{pic:lena_binary_70}
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{lena_binary_70}
+  \end{minipage}
+  }
+  \subfloat[]{
+  \label{pic:lena_binary_adaptive}
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{lena_binary_adaptive}
+  \end{minipage}
+  }
+  \caption{不同二值化方法的差别}
+  \label{pic:different-binary-approach}
+\end{figure}
+
+\subsubsection*{图像的膨胀和腐蚀}
+
 
 \section{预处理模块}     % 1000字
 \subsection{方案选取}
