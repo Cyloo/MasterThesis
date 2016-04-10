@@ -296,28 +296,31 @@ void adaptiveThreshold(InputArray src, OutputArray dst, double maxValue, int ada
   \centering
   \subfloat[]{
   \label{pic:lena_binary_origin}
-  \begin{minipage}[t]{0.3\textwidth}
+  \begin{minipage}[t]{0.45\textwidth}
     \centering
     \includegraphics[width=\textwidth]{lena_grey}
   \end{minipage}
   }
+	\hfill
   \subfloat[]{
   \label{pic:lena_binary_130}
-  \begin{minipage}[t]{0.3\textwidth}
+  \begin{minipage}[t]{0.45\textwidth}
     \centering
     \includegraphics[width=\textwidth]{lena_binary_130}
   \end{minipage}
   }
+	\vskip\baselineskip
   \subfloat[]{
   \label{pic:lena_binary_70}
-  \begin{minipage}[t]{0.3\textwidth}
+  \begin{minipage}[t]{0.45\textwidth}
     \centering
     \includegraphics[width=\textwidth]{lena_binary_70}
   \end{minipage}
   }
+	\hfill
   \subfloat[]{
   \label{pic:lena_binary_adaptive}
-  \begin{minipage}[t]{0.3\textwidth}
+  \begin{minipage}[t]{0.45\textwidth}
     \centering
     \includegraphics[width=\textwidth]{lena_binary_adaptive}
   \end{minipage}
@@ -364,7 +367,6 @@ void adaptiveThreshold(InputArray src, OutputArray dst, double maxValue, int ada
 对图片的灰度化、二值化、膨胀和腐蚀操作有所了解以后，我们就可以利用这些图像处理方法，来进行图片分类任务了。前面我们提到我们是通过比较图片与三种版式图片的相似性来确定图片的版式，如
 
 \section{预处理模块}     % 1000字
-\subsection{方案选取}
 
 \section{OCR模块}     % 6000字
 \subsection{方案选取}
