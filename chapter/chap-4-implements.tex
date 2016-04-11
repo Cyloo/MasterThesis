@@ -507,6 +507,45 @@ void adaptiveThreshold(InputArray src, OutputArray dst, double maxValue, int ada
 至此，我们完成了版面分析的全部工作。
 
 \section{预处理模块}     % 1000字
+虽然原始的病历图片并不算模糊，但是由于每个字相对来说很小，导致当我们将截取出来的字段放大来看时，每个字的笔画很模糊，有不少噪声，并且像素化明显（见\autoref{pic:image-before-processing}，这是从病历图片中截取出来的一个字段），这样的文字对于文字识别来说是很困难的，因此我们需要一个预处理模块，来对文字进行放大，加粗线条，去除噪声，降低识别难度。
+首先要做的就是文字的放大，在放大的过程中，为了保持文字的连贯，避免由于文字笔画太细出现中断的情况，我们需要用到插值（interpolation）算法。插值算法在图像处理领域有着广泛的运用\citep{thevenaz2000image}，简单来说它是一种根据已有像素点的值来填充新像素点的方法，常用的插值方法有以下几种：
+\begin{itemize}
+	\item 最近邻插值，这是一种最简单的插值算法，新像素点的值由离它最近的像素点确定，即与最近的像素点的值保持一致，显然这样的话，图片会有比较明显的锯齿效应。
+	\item 线性插值，是指以线性函数为插值函数的插值方法，对于最简单的一维情况，它的数学表达式可写为
+		\begin{equation}
+			P(x) = f_0\frac{x-x_1}{x_0-x_1}+f_1\frac{x-x_0}{x_1-x_0}
+		\end{equation}
+		其中，$x_0$、$x_1$分别为已知的两个像素点的坐标，$f_0$、$f_1$为它们对应的像素值，那么新像素点$x$的像素值为$P(x)$。
+	\item 双线性插值，它可以被看做是线性插值的一个拓展，核心思想是在两个方向上各进行一次线性插值，叠加结果得到新像素点的像素值。
+\end{itemize}
+除此之外，还有双三次插值、分形插值（Fractal Interpolation）\citep{barnsley1986fractal}、边缘定向插值（Edge-directed Interpolation）\citep{li2001new}等，这里就不再一一介绍。
+OpenCV中进行图片放缩的时候，支持指定自带的几种插值方法，函数原型是：
+\begin{Code}
+void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=0, int interpolation=INTER_LINEAR )
+\end{Code}
+其中最后一个参数，用来指定插值方法，支持最近邻插值、双线性插值、双三次插值等。
+
+文字经过二值化、放缩等步骤以后，最后转换成了\autoref{pic:image-after-processing}，可以看到，相比于原图，图片更加纯净，去除了大量的早点，同时文字线条也更加饱满清晰，更加便于文字识别系统的识别，后续的实验也证明这大大提高了文字识别精度。至此，图片的预处理阶段完成。
+\begin{figure}[htbp]
+  \centering
+  \subfloat[]{
+  \label{pic:image-before-processing}
+  \begin{minipage}[t]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{text-origin}
+  \end{minipage}
+  }
+	\hfill
+  \subfloat[]{
+  \label{pic:image-after-processing}
+  \begin{minipage}[t]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{text-resized}
+  \end{minipage}
+  }
+  \caption{文字的预处理}
+  \label{pic:pre-processing}
+\end{figure}
 
 \section{OCR模块}     % 6000字
 
