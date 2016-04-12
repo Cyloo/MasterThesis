@@ -548,6 +548,9 @@ void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=
 \end{figure}
 
 \section{OCR模块}     % 6000字
+在前面的章节中，我们已经简要介绍了开源OCR引擎Tesseract的发展历史和基本现状，作为整个系统的核心模块，我们有必要对Tesseract有更加详细的了解，接下来，我们将从架构、实现细节方面来展开介绍。这部分内容主要参考自Tesseract的开发人员的两篇文章
+\subsection{整体架构}
+
 
 \section{字段解析模块}  %3000字
 当含有文本的图片数据经过OCR模块以后，会被转换为文本，这些文本需要进行一定的加工，才能得到我们想要的各字段数据。总体来说，原始的文本需要经过数据清洗、字段匹配、目标文本提取等步骤。我们也可以认为这是数据的“后处理”过程。
