@@ -102,7 +102,7 @@ git am --signoff ../vs2013+64bit_support.patch
 	\item 忽略已归档的病历。系统可以根据文件夹名字，维护一个已归档病历数据的列表，这样，在扫描文件夹时，忽略已归档病历。
 \end{itemize}
 具体实现上，OpenCV中提供了读取目录下所有图片的函数，具体代码如下：
-\begin{Codex}[label=readImages,number=left]
+\begin{Codex}[label=readImages,numbers=left]
 	int main()
 	{
 	    vector<String> filenames;
@@ -664,5 +664,18 @@ Tesseract官方提供了一个中文字符库\footnote{官方提供的多种语�
 
 
 \section{数据存储模块} %500字
+当字段解析完成后，最后一步就是存储，根据\autoref{ssub:requirements-dataWriter}中的需求分析，存储的数据格式应该是可用excel打开，便于展示的，常见的excel文件读写方式有以下几种：
+\begin{itemize}
+	\item OLE（Object Linking and Embedding）方式。它的原理是启动一个EXCEL的进程来读写excel文件，它的优点是功能强大，能满足各种excel操作，缺点是读写速度慢，并且这种方式是不可移植的，且必须已经安装EXCEL。
+	\item LibXL方式。LibXL是一个收费的EXCEL库\footnote{LibXL网址：http://www.libxl.com/}，优点是可以不依赖EXCEL来读取xls文件，操作简单，缺点当然是需要收费。
+	\item ODBC（Open Database Connectivity）方式。ODBC是微软提出的数据库访问接口标准，采用这种方式读取excel可以做丰富的数据库管理操作，缺点是读写速度慢，另外需要安装excel驱动程序。
+\end{itemize}
+我们需要存储的数据只是需要用excel作为简单的展示平台，本身并不需要其他的excel操作，因此以上几种方式事实上都是功能过剩，存储效率比较低，而且需要已经安装EXCEL，无法跨平台。本系统最后采用的解决方案是将病历数据存储为csv格式的文本文档，CSV（Comma-Separated Values），是一种文件存储格式，以纯文本形式来存储表格数据，它的这个特性带来了如下几个优点：
+\begin{itemize}
+	\item 读写速度快，因为它是一种纯文本格式，所以可以很快地进行文本读写操作；
+	\item 可以直接被EXCEL识别为正确的表格文件，让数据拥有更好的展示效果；
+	\item 不依赖EXCEL程序本身，这样它就能做到跨平台。
+\end{itemize}
+因此，csv格式存储已经满足了本系统的所有需求，是综合考虑以后最优的解决方案。
 
 \section{小结}
