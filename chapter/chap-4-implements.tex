@@ -154,9 +154,9 @@ cut = origin( Rect(x0, y0, width, height) );
 需要注意的是，在确定的病历系统中，其系统信息和侧边栏导航的内容和位置是相对固定的，我们可以根据这一点，利用模板匹配的方式，确定系统信息栏和侧边导航栏的位置，并进行裁剪。
 
 模板匹配（Template Matching）\citep{template-matching}，是一项在原始图片中寻找匹配模板图片的小区域的技术。在OpenCV中，提供了模板匹配的函数
-\begin{Code}
+\begin{lstlisting}
 void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)
-\end{Code}
+\end{lstlisting}
 其中image表示原始图像，templ表示模板图像，result为结果矩阵，method为匹配算子类型。具体匹配过程为模板图像在原始图像中滑动，根据不同的匹配算子，计算重叠区域的匹配度，当滑动过整个原始图像区域后，返回匹配度最高的子图像信息。
 
 OpenCV提供了6种默认的匹配算子，最常见的是平方差匹配算子（\autoref{eq:square}）和相关匹配算子（\autoref{eq:correlation}）：
@@ -177,7 +177,7 @@ R(x,y)=\sum_{x^{'},y^{'}}(T(x^{'},y^{'})\cdot I(x+x^{'},y+y^{'}))
 \end{figure}
 
 对于病历图片中的系统信息栏，我们可以通过截取原图中系统信息栏的部分保存下来，作为模板，如\autoref{pic:title-template}所示。然后运用模板匹配算法，剪裁掉原图中上方系统信息栏部分，代码如下：（其中算子采用平方差算子，输入参数src代表原图，\_template代表模板，template\_type为模板类型，返回值roi为截掉模板之后的图像。）
-\begin{Codex}[label=Cut,numbers=left]
+\begin{lstlisting}
 Mat MatchingMethod(Mat src, Mat _template, int template_type)
 {
 	// template_type option:  0 -> title, 1 -> sidebar
@@ -201,7 +201,7 @@ Mat MatchingMethod(Mat src, Mat _template, int template_type)
 	roi = src(Rect(0, matchLoc.y + _template.rows, matchLoc.x + _template.cols, src.rows - matchLoc.y - _template.rows));
 	return roi;
 }
-\end{Codex}
+\end{lstlisting}
 
 去掉系统信息栏之后的图像如\autoref{pic:template-cut-title}所示，接着我们采用同样的方法，也可去掉侧边的导航栏，最终得到\autoref{pic:template-cut-title}所示，可以看到，病历的主体已经被完整的剥离出来，至此，主体保留的工作就完成了。
 
@@ -313,15 +313,15 @@ Mat MatchingMethod(Mat src, Mat _template, int template_type)
 其中$x$表示像素点的灰度值（常见取值为$0-255$），$threshold$为二值化的阈值，当$x$大于阈值时，该像素点为白色，反之为黑色。OpenCV提供了两种二值化方法，分别是固定阈值方法和自适应阈值方法。
 
 固定阈值方法，即需要事先指定一个全局阈值，根据这个阈值对灰度图进行二值化，函数原型为
-\begin{Code}
+\begin{lstlisting}
 double threshold(InputArray src, OutputArray dst, double thresh, double maxval, int type)
-\end{Code}
+\end{lstlisting}
 固定阈值方法虽然实现简单，但是阈值需要人工选取，很难保证效果，当阈值选的太大时，会产生很多噪声，淹没主体（见\autoref{lena_binary_130}），阈值选的太小时，又会丢失大量的细节（见\autoref{lena_binary_70}），因此这种方法在具体实施时并不推荐。
 
 自适应阈值方法，函数原型为
-\begin{Code}
+\begin{lstlisting}
 void adaptiveThreshold(InputArray src, OutputArray dst, double maxValue, int adaptiveMethod, int thresholdType, int blockSize, double C)
-\end{Code}
+\end{lstlisting}
 它根据像素的邻域块的像素值分布来确定该像素位置上的二值化阈值。这样做的好处在于每个像素位置处的二值化阈值不是固定不变的，而是由其周围邻域像素的分布来决定的。亮度较高的图像区域的二值化阈值通常会较高，而亮度较低的图像区域的二值化阈值则会相适应地变小。不同亮度、对比度、纹理的局部图像区域将会拥有相对应的局部二值化阈值。常用的局部自适应阈值有：1）局部邻域块的均值；2）局部邻域块的高斯加权和。%这一段摘自http://blog.csdn.net/icvpr/article/details/8515596
 自适应阈值二值化效果见\autoref{lena_binary_adaptive}，图片即保证了主体的明确，没有很多噪声，又保留了大部分的细节。
 
@@ -552,17 +552,19 @@ void adaptiveThreshold(InputArray src, OutputArray dst, double maxValue, int ada
 \end{itemize}
 除此之外，还有双三次插值、分形插值（Fractal Interpolation）\citep{barnsley1986fractal}、边缘定向插值（Edge-directed Interpolation）\citep{li2001new}等，这里就不再一一介绍。
 OpenCV中进行图片放缩的时候，支持指定自带的几种插值方法，函数原型是：
-\begin{Code}
+\begin{lstlisting}
 void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=0, int interpolation=INTER_LINEAR )
-\end{Code}
+\end{lstlisting}
 其中最后一个参数，用来指定插值方法，支持最近邻插值、双线性插值、双三次插值等。
 
-文字经过二值化、放缩等步骤以后，最后转换成了\autoref{pic:image-after-processing}，可以看到，相比于原图，图片更加纯净，去除了大量的早点，同时文字线条也更加饱满清晰，更加便于文字识别系统的识别，后续的实验也证明这大大提高了文字识别精度。至此，图片的预处理阶段完成。
+文字经过二值化、放缩等步骤以后，最后转换成了\autoref{pic:image-after-processing}，可以看到，相比于原图，图片更加纯净，去除了大量的躁点，同时文字线条也更加饱满清晰，更加便于文字识别系统的识别，后续的实验也证明这大大提高了文字识别精度。
+
+同时在实践过程中还发现，有些情况下，左右结构的文字很容易被误分割，例如“日期”会被分割成为“日其月”，这样的误分割可能是横向间隔较大导致的，因此，我们尝试在放缩时减小横向的放缩比例，让文字显得更加细长（如\autoref{pic:image-after-processing-2}所示），发现对于误分割问题有明显改善。
 \begin{figure}[htbp]
   \centering
   \subfloat[]{
   \label{pic:image-before-processing}
-  \begin{minipage}[t]{0.45\textwidth}
+  \begin{minipage}[t]{0.3\textwidth}
     \centering
     \includegraphics[width=\textwidth]{text-origin}
   \end{minipage}
@@ -570,9 +572,17 @@ void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=
 	\hfill
   \subfloat[]{
   \label{pic:image-after-processing}
-  \begin{minipage}[t]{0.45\textwidth}
+  \begin{minipage}[t]{0.3\textwidth}
     \centering
     \includegraphics[width=\textwidth]{text-resized}
+  \end{minipage}
+  }
+	\hfill
+  \subfloat[]{
+  \label{pic:image-after-processing-2}
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{text-resized-thin}
   \end{minipage}
   }
   \caption{文字的预处理}
@@ -645,9 +655,36 @@ Tesseract中采用的分类器模型是k近邻（k-Nearest Neighbour，KNN），
 另外，Tesseract为了支持阿拉伯语专门实现了一个卷积神经网络（Convolutional neural networks，CNN）分类器，在阿拉伯语上表现很好，但在欧洲语言上，性能和效果都不行。%这一句摘自http://zhuanlan.zhihu.com/p/20231514
 
 \subsection{字符库训练}
-Tesseract官方提供了一个中文字符库\footnote{官方提供的多种语言字符库下载：https://github.com/tesseract-ocr/tessdata}，用来对中文进行识别，这个字符库中包含了印刷体中文里的很多种字体，是一个大而全的字符库，
+Tesseract官方提供了一个中文字符库\footnote{官方提供的多种语言字符库下载：https://github.com/tesseract-ocr/tessdata}，用来对中文进行识别，这个字符库中包含了印刷体中文里的很多种字体，是一个大而全的字符库，在针对特定问题时，准确率一般。以医学档案为例，它有如下几个特点：
+\begin{itemize}
+	\item 在医学档案中出现的文字大多为医学相关的名词和术语，与日常用语有一定不同；
+	\item 病历数据中，有很多词会大量重复出现，例如各种字段名，如姓名、性别等；
+	\item 仅本系统而言，病历数据的字体都为宋体，并不需要多种字体的识别。
+\end{itemize}
+上面几个特点是很宝贵的先验知识，但是官方的中文字符库却无法利用上。
+
+所幸Tesseract提供了训练新字符库的接口\footnote{有关Tesseract语言训练的官方文档：https://github.com/tesseract-ocr/tesseract/wiki/TrainingTesseract}，我们可以针对上面提到的几个特点，有针对性地训练字符库。具体来说，字符库的训练可以分为以下几步：
+\begin{itemize}
+	\item 收集常见的医学词汇和高频字段，并将字体设定为宋体，产生训练图片；
+	\item 聚合真实的病历图片数据，结合上一步产生的训练图片，构成数据集；
+	\item 利用TessBoxEditor工具，校正训练字库\autoref{pic:fix-trainingset}；
+	\item 利用训练字库，产生字符特征文件；
+	\item 利用Tesseract的训练工具，计算字符集；
+	\item 根据宋体本身特征，定义字体特征文件；
+	\item 聚集字符特征；
+	\item 利用训练工具，得到最终的字符库。
+\end{itemize}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\textwidth]{fix-trainingset}
+	\caption{校正训练字库}
+	\label{pic:fix-trainingset}
+\end{figure}
+经过上面这几步，我们就产生了针对病历数据的字符库，同时我们注意到Tesseract是支持多个字符库共用的，所以我们可以将新训练的字符库和Tesseract官方提供的字符库连用，这样既能保证整体的通用性，又能针对病历数据进行优化提升。
 
 \subsection{添加用户字典}
+Tesseract也是支持添加用户字典的，在Tesseract中，字典数据以DAWG（Direct Acyclic Word Graph）的形式存在，它们包括通用词组、高频词组、字符、标点等等，我们也可以利用Tesseract提供的工具，加入针对病历数据的用户字典，提升准确率。
 
 \subsection{其他细节}
 值得一提的是，在Windows平台，Tesseract识别的文本在显示时会出现大量的乱码问题，这是因为Windows平台默认的文本代码存储方式是UTF8-WithBOM，而Tesseract引擎识别后产出的文本是以标准UTF8格式的，直接输出势必会产生乱码。因此（在Windows平台）我们需要对文本进行转码，具体的转码步骤是先将UTF8转换成Unicode格式，然后将Unicode转换成Ansi字符标准格式，这两个转换函数如下所示：
@@ -712,3 +749,4 @@ char* UnicodeToAnsi( const wchar_t* szStr )
 因此，csv格式存储已经满足了本系统的所有需求，是综合考虑以后最优的解决方案。
 
 \section{小结}
+至此，本章已经将病历自动归档系统的整个流程中主要的实现细节，包括数据加载、处理、识别、输出等，结合公式、表格、图片进行了较为详细的阐述，举例说明了病历自动归档任务中的多个难点问题以及对应的解决办法和优化措施，在保证功能完善的同时力求系统的精简易用，对于有相似需求的应用开发，有一定的借鉴意义。
