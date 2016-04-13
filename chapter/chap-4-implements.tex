@@ -98,11 +98,26 @@ git am --signoff ../vs2013+64bit_support.patch
 \end{itemize}
 除此之外，这样的数据组织形式也提供了如下功能特性：
 \begin{itemize}
-	\item 可添加简单的容错处理。通过检测文件夹下图片的数目，我们可以确定是否有图片缺失或是冗余，可以作为一个简单的容错。
-	\item 忽略已经写入过的文件夹
+	\item 可添加简单的容错处理。通过检测文件夹下图片的数目，我们可以确定是否有图片缺失或是冗余，可以作为一个简单的容错处理。
+	\item 忽略已归档的病历。系统可以根据文件夹名字，维护一个已归档病历数据的列表，这样，在扫描文件夹时，忽略已归档病历。
 \end{itemize}
-
-
+具体实现上，OpenCV中提供了读取目录下所有图片的函数，具体代码如下：
+\begin{Codex}[label=readImages,number=left]
+	int main()
+	{
+	    vector<String> filenames;
+	    String folder = "some_folder_path";
+	    glob(folder, filenames);
+	    for(size_t i = 0; i < filenames.size(); ++i)
+	    {
+	        Mat src = imread(filenames[i]);
+	        if(!src.data)
+	            cerr << "Problem loading image!!!" << endl;
+	        /* do whatever you want with your images here */
+	    }
+	}
+\end{Codex}
+其中，$some_folder_path$就是某个病人的病历文件夹名字，$filenames$中存储的就是文件夹底下的图片名字。
 
 \section{版面分析模块}  % 3000字
 文档版面分析（Document Layout Analysis），是指在含有文本的图像中识别出感兴趣区域（Regions of Interest，ROI）的过程。一个文字识别系统需要将文字从非文字的区域中划分出来，同时保持文本的相对顺序\citep{baird1992anatomy}。在一个文件中检测和标记出文本区域和其他非文本区域的过程叫做几何学版面分析（Geometric Layout Analysis）\citep{cattoni1998geometric}。但是不同的文本区域在文档中代表的含义并不相同，例如有些文本是文档的标题，有些是文档的注释，有些是文档的主体等等，具体到病历档案归类系统中，就是文本块所属的字段是各不相同的，这种识别文字在文档中的含义的过程叫做逻辑学版面分析（Logical Layout Analysis）\citep{haralick1994document}。
