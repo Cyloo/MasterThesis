@@ -86,7 +86,9 @@ git am --signoff ../vs2013+64bit_support.patch
 上面的只是一个配置过程的简述，不同平台、不同版本之间的配置方式有着比较明显的差异，需结合自身的情况，选取对应的配置部署流程，这里不再详述。
 
 \section{数据加载模块}  %500字
-可添加简单的容错处理
+
+1.可添加简单的容错处理
+2.忽略已经写入过的文件夹
 
 \section{版面分析模块}  % 3000字
 文档版面分析（Document Layout Analysis），是指在含有文本的图像中识别出感兴趣区域（Regions of Interest，ROI）的过程。一个文字识别系统需要将文字从非文字的区域中划分出来，同时保持文本的相对顺序\citep{baird1992anatomy}。在一个文件中检测和标记出文本区域和其他非文本区域的过程叫做几何学版面分析（Geometric Layout Analysis）\citep{cattoni1998geometric}。但是不同的文本区域在文档中代表的含义并不相同，例如有些文本是文档的标题，有些是文档的注释，有些是文档的主体等等，具体到病历档案归类系统中，就是文本块所属的字段是各不相同的，这种识别文字在文档中的含义的过程叫做逻辑学版面分析（Logical Layout Analysis）\citep{haralick1994document}。
@@ -608,7 +610,13 @@ void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=
 Tesseract在识别时会做两遍识别，第一遍时，识别系统会尝试着轮流识别每个单词。每当识别一个有可信度的单词时，这个单词就会被加入到一个自适应分类器（adaptive classifier）中，作为训练数据。这样这个自适应分类器就能在识别接下来的文字时有更高的精度。如果只过一遍网络，那么自适应分类器学到的新知识就无法应用到当前的文本中，因此，需要过第二遍识别，这一次识别的重点是第一遍中没有能够很好识别的那些文字。%这几句与“整体流程”小节一样。
 因此，自适应分类器让Tesseract具有了即时（on-the-fly）的学习能力。
 
+\subsubsection*{分类器模型}
+Tesseract中采用的分类器模型是k近邻（k-Nearest Neighbour，KNN），采用的距离度量是在特征空间里的欧几里得距离，k近邻是机器学习中比较成熟的分类模型，它的核心思路是：如果一个样本在特征空间里面k个最相似的样本中的大多数属于某一个类别，那么该样本也属于这个类别。k近邻虽然实现简单，但是它有 一个很大的缺点就是计算量比较大，因为每个样本需要与其他所有的样本进行距离计算，当特征空间维数大或者训练数据容量大时，无疑是非常耗时的。这也是Tesseract在识别速度上不如市面上很多商业化OCR软件的原因之一。
+另外，Tesseract为了支持阿拉伯语专门实现了一个卷积神经网络（Convolutional neural networks，CNN）分类器，在阿拉伯语上表现很好，但在欧洲语言上，性能和效果都不行。%这一句摘自http://zhuanlan.zhihu.com/p/20231514
+
 \subsection{字符库训练}
+Tesseract官方提供了一个中文字符库\footnote{官方提供的多种语言字符库下载：https://github.com/tesseract-ocr/tessdata}，用来对中文进行识别，这个字符库中包含了印刷体中文里的很多种字体，是一个大而全的字符库，
+
 \subsection{添加用户字典}
 
 
