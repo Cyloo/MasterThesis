@@ -28,6 +28,82 @@ int main()
 	}
 
 }
+
+Mat ImageResize(Mat origin, int layoutType)
+{
+	/*
+	//å¦‚æœå›¾ç‰‡è¾ƒå¤§ï¼Œå°±ä¸å†æ”¾ç¼©
+	if (origin.cols*origin.rows > 100000)
+	return origin;
+	*/
+	//æŒ‰æ¯”ä¾‹æ”¾ç¼©ï¼Œæ¨ªå‘å’Œçºµå‘æ”¾ç¼©çš„æ¯”ä¾‹ä¸º3:4(å¯¹äºé¡µé¢3ï¼‰
+
+	Mat binary;
+	if (layoutType == 1)
+	{
+		Size dsize = Size(origin.cols * 4, origin.rows * 4);
+		Mat resized = Mat(dsize, CV_32S);
+		resize(origin, resized, dsize);
+		//è¿›è¡ŒäºŒå€¼åŒ–
+		threshold(resized, binary, 180, 255, THRESH_BINARY);
+	}
+	else if (layoutType == 2)
+	{
+		Size dsize = Size(origin.cols * 4, origin.rows * 4);
+		Mat resized = Mat(dsize, CV_32S);
+		resize(origin, resized, dsize);
+		//è¿›è¡ŒäºŒå€¼åŒ–
+		threshold(resized, binary, 180, 255, THRESH_BINARY);
+	}
+	else
+	{
+		Size dsize = Size(origin.cols * 3, origin.rows * 4);
+		Mat resized = Mat(dsize, CV_32S);
+		resize(origin, resized, dsize);
+		//è¿›è¡ŒäºŒå€¼åŒ–
+		threshold(resized, binary, 180, 255, THRESH_BINARY);
+	}
+
+	return binary;
+}
+
+int generate_new_training_data()
+{
+	vector<String> filenames; // notice here that we are using the Opencv's embedded "String" class
+	String folder = "training-data-organized"; // again we are using the Opencv's embedded "String" class
+
+	glob(folder, filenames); // new function that does the job ;-)
+	for (size_t i = 0; i < filenames.size(); ++i)
+	{
+		Mat src = imread(filenames[i], 0);
+		if (!src.data){
+			cerr << "Problem loading image!!!" << endl;
+		}
+
+		Mat dst;
+		Mat eroded, binary_coded;
+
+		string new_filename_temp = filenames[i];
+		int slash_pos = new_filename_temp.find("\\"), dot_pos = new_filename_temp.find(".");
+		string new_filename = new_filename_temp.substr(slash_pos + 1, dot_pos - slash_pos - 1) + ".tif";
+		string new_filename_withDirectory = "new-training-data/" + new_filename;
+
+		//æå–ä¸»ä½“éƒ¨åˆ†
+		Mat roi = src(Rect(0.2*src.cols, 0.167*src.rows, 0.73*src.cols, 0.8*src.rows));
+		Mat output;
+		if (new_filename.at(2) == '1')
+			output = ImageResize(roi, 1);
+		else if (new_filename.at(2) == '2')
+			output = ImageResize(roi, 2);
+		else
+			output = ImageResize(roi, 3);
+		//imshow(new_filename_withDirectory, output);
+		imwrite(new_filename_withDirectory, output);
+		cout << new_filename << endl;
+	}
+	waitKey();
+	return 0;
+}
 /*
 /// Global Variables
 Mat img; Mat templ; Mat result;
@@ -175,7 +251,7 @@ int binary_test()
 		return -1;
 	}
 
-	// È«¾Ö¶şÖµ»¯
+	// È«ï¿½Ö¶ï¿½Öµï¿½ï¿½
 	Mat global1, global2;
 	cv::threshold(image, global1, 70, 255, CV_THRESH_BINARY);
 	cv::threshold(image, global2, 130, 255, CV_THRESH_BINARY);
@@ -183,7 +259,7 @@ int binary_test()
 	//cv::threshold(image, global, th, 255, THRESH_BINARY + THRESH_OTSU);
 
 
-	// ¾Ö²¿¶şÖµ»¯
+	// ï¿½Ö²ï¿½ï¿½ï¿½Öµï¿½ï¿½
 
 	int blockSize = 25;
 	int constValue = 10;
@@ -216,7 +292,7 @@ int grey_test(void)
 	Mat _binary;
 	threshold(lena_grey, _binary, 80, 255, THRESH_BINARY);
 	imshow("lena_binary", _binary);
-	waitKey();	
+	waitKey();
 	return 0;
 }
 
@@ -227,16 +303,16 @@ int test_main()
 	Mat dst;
 	Mat eroded, binary_coded;
 
-	//ÌáÈ¡Ö÷Ìå²¿·Ö
+	//ï¿½ï¿½È¡ï¿½ï¿½ï¿½å²¿ï¿½ï¿½
 	Mat roi = src(Rect(0.2*src.cols, 0.15*src.rows, 0.73*src.cols, 0.8*src.rows));
 
-	//¶şÖµ»¯
+	//ï¿½ï¿½Öµï¿½ï¿½
 	threshold(roi, dst, 0, 255, THRESH_BINARY);
 
 	imshow("src", src);
 
 	/*
-	//½øĞĞµÚÒ»²½¸¯Ê´£¬¸¯Ê´Ç¿¶È½Ï¸ß£¬ÒÔ±ãÕÒµ½×î´óÁ¬Í¨ÇøÓò
+	//ï¿½ï¿½ï¿½Ğµï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ê´ï¿½ï¿½ï¿½ï¿½Ê´Ç¿ï¿½È½Ï¸ß£ï¿½ï¿½Ô±ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½
 	Mat element = getStructuringElement(MORPH_RECT, Size(40, 70));
 	erode(dst, eroded, element);
 	imshow("erode", eroded);
@@ -250,7 +326,7 @@ int test_main()
 	vector<vector<Point>> contours_poly(contours.size());
 	vector<Rect> boundRect(contours.size());
 
-	// Ñ°ÕÒ×î´óÁ¬Í¨Óò  
+	// Ñ°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½
 	double maxArea = 0, secondArea = 0;
 	vector<cv::Point> maxContour;
 	for (size_t i = 0; i < contours.size(); i++)
@@ -263,7 +339,7 @@ int test_main()
 		}
 	}
 
-	// ½«ÂÖÀª×ªÎª¾ØĞÎ¿ò  
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªÎªï¿½ï¿½ï¿½Î¿ï¿½
 	Rect maxRect = cv::boundingRect(maxContour);
 
 	Rect maxRegion;
@@ -299,7 +375,7 @@ int test_main()
 	threshold(eroded, binary_coded, 0, 255, THRESH_BINARY);
 	imshow("binary_coded", binary_coded);
 
-	//the pram. for findContours,  
+	//the pram. for findContours,
 	vector<vector<Point> > contours;
 	vector<Vec4i> hierarchy;
 	findContours( binary_coded, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));

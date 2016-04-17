@@ -6,7 +6,7 @@
 医学档案的自动生成与归类，其涉及到的最核心的两项技术就是图像处理和文字识别，可以说这两项技术的解决方案选取和完成度，决定了整个系统的性能基线，因此，我们必须综合考量备选的各个方案，从性能、稳定性、易用性等维度，择优采用。接下来，我们就这两项技术的方案选取和部署来展开讨论。
 
 \subsection{图像处理}
-\subsubsection{方案选取}
+\subsubsection*{方案选取}
 图像处理（Image Processing），通常又称数字图像处理，它将输入的图片、图片组或者是视频经过一系列的信号处理方面的数学转换，得到处理后的图片或是与图片相关的参数产出\citep{gonzalez2008digital}。本质来说，图像处理技术是将图片当做一个二维的信号，然后将标准的信号处理技术应用其上，当然，当图像处理技术运用到视频中时，输入变成了三维的信号，这第三维就是时间。近些年来，随着计算机视觉的蓬勃发展，图像处理技术也受到越来越多的关注。
 
 结合前一章的分析我们可以看到，整个系统的六个模块（\autoref{pic:system-framework}）中，数据加载模块、版面分析模块、预处理模块都需要用到图像处理的技术，因此我们有必要综合所有模块的需求，选取一个合适的图像处理解决方案。目前比较主流的图像处理类库有OpenCV\citep{bradski2008OpenCV}、EmguCV\citep{Shi013emgu}、AForge.net\citep{Kirillov2013Aforge}、CImg\citep{tschumperle2012cimg}等，在\citep{XianrongWang}的文章中，作者对几大主流的的图像处理库在各个维度做了一个比较全面的对比。从\autoref{pic:image-processing-comparison}中可以看到，OpenCV在性能上，是其中的佼佼者，也是最为广泛使用的图像处理类库，在功能上，也能完全满足本系统的图像处理要求，故经过比较后，系统决定采用它作为图像处理的解决方案。
@@ -20,7 +20,7 @@
 
 OpenCV（Open Source Computer Vision）是一个旨在完成实时机器视觉（Real-time Computer Vision）的函数库，最早是由英特尔研究中心开发，后被Will Garage接手，现在是由Itseez团队负责维护，是一个跨平台的免费开源图像处理库\citep{wiki:OpenCV}。OpenCV最早于2000年发行，目前仍在更新和维护，最新的稳定版是于2015年12月发布的OpenCV 3.1更新。它的代码由C/C++写就，同时提供了Python、Java以及Matlab等语言的接口\citep{wiki:OpenCV}。自其发布后的15年来，OpenCV一直以它良好的性能和高度的稳定性著称，是使用最为广泛的图像处理库。这也意味着它有着大量的用户测试经验和成熟的社区支持，这无疑为我们解决项目中的棘手问题提供了基础保障，具体来说，本系统的数据加载模块、版面分析模块、预处理模块都需要用到OpenCV提供的函数方法支持，我们也将在后面的模块详细介绍中，体会到OpenCV的强大功能。
 
-\subsubsection{环境部署}
+\subsubsection*{环境部署}
 OpenCV是有很好的多平台支持（Windows，Linux，Mac等），环境的部署也比较简单，这里我们仅以Windows平台下Visual Studio 2013的opencv配置使用为例，做一个部署步骤的简要展示：
 \begin{itemize}
   \item 从\href{http://opencv.org/}{OpenCV官方主页}下载最新的OpenCV 3.1安装包，解压安装包完成安装。并将OpenCV加入系统环境变量。
@@ -45,7 +45,7 @@ int main(void)
 上面只是简述了OpenCV的部署步骤，具体到不同的平台和软件版本，部署时会有一些小的差异，读者可结合自己的情况，从网络上找到对应的详细部署指南，这里就不再赘述了。
 
 \subsection{字符识别}
-\subsubsection{方案选取}
+\subsubsection*{方案选取}
 字符识别（Character Recognition），又称光学字符识别（Optical Character Recognition，OCR），是指将印刷或手写的文字转换成机器编码（machine-encoded）文本的过程，它被广泛应用于纸质印刷的数据录入中，例如护照文件、发票、信件、银行存单等，当这些纸质文件被转换成了机器编码的文本以后，无论是在编辑修改、搜索、存储，还是在后续的数据挖掘，文字转语音等过程中，都变得相对便捷和高效。OCR是模式识别（Pattern Recognition）、（Artificial Intelligence）和计算机视觉（Computer Vision）领域中的典型应用\citep{wiki:OCR}。
 
 具体到本系统，我们是要讲光学字符识别技术应用到纸质或截图保存的病历数据中，这项技术会在OCR模块中用到，在技术实现上与其他基于光学字符识别的应用并没有本质的不同，因此我们可以采用已有的OCR解决方案。目前比较主流的OCR解决方案有ABBYY FineReader、Microsoft Office内置的OCR模块、Tesseract、FreeOCR等，维基百科中有对各种OCR软件的详细对比\citep{wiki:OCRcomparison}，同时，也有组织对于最好的OCR软件做过一个排名（见\autoref{pic:ocr-software-comparison}），从这个排名中我们可以看到，好的商用OCR软件一般都售价不菲（图片中的价格仅针对个人用户），同时由于病历数据的版面结构复杂，并没有一个比较通用的版面分析方案，所以这些商用OCR软件无法直接应用到系统中，因此，我们需要一个有提供编程接口（Application Programming Interface，API）的OCR解决方案，方便定制特定场景下的OCR。能提供编程接口的OCR引擎中，Tesseract是其中的首选。
@@ -61,7 +61,7 @@ Tesseract OCR引擎是一款能运行在多系统全平台（Windows，Linux，M
 
 在1995年，Tesseract在识别准确率上是排名前三的OCR引擎，最早的版本只支持英文，之后逐步添加多语言的支持，其中就包括中文。准确性较高、支持多语言加之免费开源，使得Tesseract在这些年，广受赞誉，是公认最好的开源OCR引擎，读者可访问\href{https://github.com/tesseract-ocr/tesseract}{Tesseract的GitHub主页}来获取最新的源代码。同时，Tesseract的源码是由C/C++编写，与同样是C/C++编写的OpenCV图像处理库能够很好的兼容，事实上，Tesseract也开发了专门针对OpenCV的API接口，提供了丰富的支持。综上，系统决定采用Tesseract作为字符识别的解决方案。
 
-\subsubsection{环境部署}
+\subsubsection*{环境部署}
 Tesseract支持多平台（Windows，Linux，Mac）使用和开发，如果只是简单使用tesseract，可以下载安装包安装Tesseract的可执行程序，如果需要基于Tesseract进行二次开发，则需要编译它的源代码，显然，我们的需求属于后者。接下来本文以Windows平台下Visual Studio 2013的Tesseract编译为例，做一个简要的环境部署展示：
 \begin{itemize}
 	\item 安装版本控制软件Git\footnote{更多相关信息可访问Git官方网站：https://git-scm.com/}。
