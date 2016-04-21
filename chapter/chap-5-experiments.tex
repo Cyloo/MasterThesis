@@ -1,8 +1,23 @@
 \chapter{实验}
 \label{chap:experiments}
-本章将对病历档案自动归档与分类系统进行完整的系统测试，验证其是否满足了\autoref{chap-2-requirement-analysis}中提出的各种需求。首先会介绍实验的运行环境，包括软件和硬件环境。然后，测试系统的功能是否完整和性能表现，以及通过对比实验来测试各项优化带来的性能提升。
+本章将对病历档案自动归档与分类系统进行完整的系统测试，验证其是否满足了\autoref{chap-2-requirement-analysis}中提出的各种需求。首先会介绍实验的运行环境，包括软件和硬件环境。然后，测试系统的功能是否完整及其性能表现，以及通过对比实验来测试各项优化带来的性能提升。
 \section{实验环境}
-本系统支持在多平台下部署，作为测试环境，选用的是Windows平台（Windows 7，X64），使用Visual Studio 2013进行开发与测试。
+本系统支持在多平台下部署，作为测试环境，选用的是Windows平台（Windows 7，X64），使用Visual Studio 2013进行开发与测试。本系统通过读取本地硬盘中特定方式组织与存储的病历图片数据，采用图像处理和OCR技术，转换为特定组织形式的文本数据，供进一步电子化和数据入库操作。系统的软硬件测试环境如\autoref{experiment-environment} 所示。
+\begin{table}[!htbp]
+  \tabcaption{系统实验环境}
+	\label{experiment-environment}
+	\centering
+	\vspace{10pt}
+  \renewcommand\arraystretch{1.5}  %这两行代码用来调整表格高度
+	\begin{tabular}{c|c|c|c}
+    \hline
+    \multicolumn{2}{c|}{硬件环境} & \multicolumn{2}{c}{软件环境} \\
+		\hline
+    CPU&GPU&操作系统&工具库 \\
+		\hline
+	\end{tabular}
+\end{table}
+
 \section{实验设计}
 
 
