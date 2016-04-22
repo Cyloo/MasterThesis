@@ -336,24 +336,24 @@ using namespace std;
 
 void trim(char str[]);
 char* resultTransfer(char* str);
-//utf-8转unicode  
+//utf-8转unicode
 wchar_t * Utf_8ToUnicode(char* szU8)
 {
-	//UTF8 to Unicode  
-	//由于中文直接复制过来会成乱码，编译器有时会报错，故采用16进制形式  
+	//UTF8 to Unicode
+	//由于中文直接复制过来会成乱码，编译器有时会报错，故采用16进制形式
 
-	//预转换，得到所需空间的大小  
+	//预转换，得到所需空间的大小
 	int wcsLen = ::MultiByteToWideChar(CP_UTF8, NULL, szU8, strlen(szU8), NULL, 0);
-	//分配空间要给'\0'留个空间，MultiByteToWideChar不会给'\0'空间  
+	//分配空间要给'\0'留个空间，MultiByteToWideChar不会给'\0'空间
 	wchar_t* wszString = new wchar_t[wcsLen + 1];
-	//转换  
+	//转换
 	::MultiByteToWideChar(CP_UTF8, NULL, szU8, strlen(szU8), wszString, wcsLen);
-	//最后加上'\0'  
+	//最后加上'\0'
 	wszString[wcsLen] = '\0';
 	return wszString;
 }
 
-//将宽字节wchar_t*转化为单字节char*    
+//将宽字节wchar_t*转化为单字节char*
 char* UnicodeToAnsi(const wchar_t* szStr)
 {
 	int nLen = WideCharToMultiByte(CP_ACP, 0, szStr, -1, NULL, 0, NULL, NULL);
@@ -375,7 +375,7 @@ int test_main()
 	Mat dst;
 	Mat eroded, binary_coded;
 	//提取主体部分
-	Mat roi = src(Rect(0.2*src.cols, 0.15*src.rows, 0.73*src.cols, 0.8*src.rows));
+	Mat roi = src(Rect(0.2*src.cols, 0.17*src.rows, 0.73*src.cols, 0.8*src.rows));
 
 	imshow("src", src);
 
@@ -386,7 +386,7 @@ int test_main()
 	imshow("erode", eroded);
 
 
-	//the pram. for findContours,  
+	//the pram. for findContours,
 	vector<vector<Point> > contours;
 	vector<Vec4i> hierarchy;
 	findContours(eroded, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
@@ -413,7 +413,7 @@ Mat ImageResize(Mat origin, double scale, int binary_threshold)
 		return origin;
 		*/
 	//按比例放缩，横向和纵向放缩的比例为3:4(对于页面3）
-	
+
 	Size dsize = Size(origin.cols*3, origin.rows*4);
 	Mat resized = Mat(dsize, CV_32S);
 	resize(origin, resized, dsize);
@@ -502,13 +502,13 @@ int main() {
 
 	Mat mainRegion = src(maxRect);
 	imshow("mainRegion", mainRegion);
-	
+
 	// transfer to binary_image
 	threshold(eroded, binary_coded, 0, 255, THRESH_BINARY);
 	//imshow("binary_coded", binary_coded);
 	*/
 
-	//the pram. for findContours,  
+	//the pram. for findContours,
 	vector<vector<Point> > contours;
 	vector<Vec4i> hierarchy;
 	findContours(eroded, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
