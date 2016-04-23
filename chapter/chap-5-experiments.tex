@@ -9,27 +9,28 @@
 	\centering
 	\vspace{10pt}
   \renewcommand\arraystretch{1.5}  %这两行代码用来调整表格高度
-	\begin{tabular}{c|c|c|c}
+	\begin{tabular}{p{3cm}|p{3cm}|p{3cm}|p{3cm}}
     \hline
     \multicolumn{2}{c|}{硬件环境} & \multicolumn{2}{c}{软件环境} \\
 		\hline
     CPU&GPU&操作系统&工具库 \\
 		\hline
-    %Intel(R) Core(TM)  i7-4770K @ 3.50GHz & NVIDIA GeForce  GTX 760 & Microsoft  Windows 7 x64 & OpenCV  Tesseract \\
-    %\hline
+    Intel(R) Core(TM)  i7-4770K @ 3.50GHz & NVIDIA GeForce  GTX 760 & Microsoft  Windows 7 x64 & OpenCV  Tesseract \\
+    \hline
 	\end{tabular}
 \end{table}
 
 \section{实验设计}
-之前的分析已经阐明，病历档案
-
-\section{整体性能测试}
-
+之前的分析已经阐明，病历档案自动归档与分类系统中，文字识别只是其中的一个模块，另外还有版面分析模块，字段提取模块等，所以在测试系统性能时，需要从版面分析、字段提取、文字识别三个方面来考量。前文提到，系统针对这三个方面都有针对性优化来提升准确率，因此，在接下来的实验中，我们将逐步验证各项优化带来的准确率差异。另外，也会从整体上测试系统的性能表现。
+\subsection*{测试数据}
+本次实验的测试数据是随机选取的8份病历数据，每份病历数据包含7到8张图片，这7到8张图片可以分为三种版面，每份病历数据中又包含约60个字段，包含有中英文、数字等字符2500个左右。因此总的训练数据共有62张图片，三种主要版面，500个左右的字段，20000个左右的字符需要识别。这种量级的测试数据具有一定的代表性和说服力。
 \section{优化效果对比}
-\subsection{预处理优化}
-
+这一章节主要考察各项优化对于各模块的优化效果。
+\subsection{版面分析模块}
+由于大部分OCR引擎普遍在版面分析方面比较薄弱，尤其是对于特定场景下的版面分析更是乏力，因此，在选取版面分析的基础对比组的时候，我们选用的是目标图片与模板图片逐个像素对比的方法作为实验的“未优化方法”，这种方法首先效率就极为低下，实验中暂且忽略效率上的差异，仅从准确率方面考量，观察本系统的版面分析模块的效果差异。实验结果如
 \subsection{自训练字符库优化}
 
 \subsection{用户字典优化}
+\section{整体性能测试}
 
 \section{小结}

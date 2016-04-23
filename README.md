@@ -11,6 +11,3 @@ The thesis is organized as follows:
 * Chap4: Technical Details
 * Chap5: Experiments
 * Chap6: Conclusion and Future work
-
-# Contact
-Feel free  to contact me by <swy.cpp@gmail.com>
