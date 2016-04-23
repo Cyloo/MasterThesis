@@ -21,14 +21,61 @@
 \end{table}
 
 \section{实验设计}
+\label{sec:experiment-design}
 之前的分析已经阐明，病历档案自动归档与分类系统中，文字识别只是其中的一个模块，另外还有版面分析模块，字段提取模块等，所以在测试系统性能时，需要从版面分析、字段提取、文字识别三个方面来考量。前文提到，系统针对这三个方面都有针对性优化来提升准确率，因此，在接下来的实验中，我们将逐步验证各项优化带来的准确率差异。另外，也会从整体上测试系统的性能表现。
 \subsection*{测试数据}
 本次实验的测试数据是随机选取的8份病历数据，每份病历数据包含7到8张图片，这7到8张图片可以分为三种版面，每份病历数据中又包含约60个字段，包含有中英文、数字等字符2500个左右。因此总的训练数据共有62张图片，三种主要版面，500个左右的字段，20000个左右的字符需要识别。这种量级的测试数据具有一定的代表性和说服力。
 \section{优化效果对比}
 这一章节主要考察各项优化对于各模块的优化效果。
-\subsection{版面分析模块}
-由于大部分OCR引擎普遍在版面分析方面比较薄弱，尤其是对于特定场景下的版面分析更是乏力，因此，在选取版面分析的基础对比组的时候，我们选用的是目标图片与模板图片逐个像素对比的方法作为实验的“未优化方法”，这种方法首先效率就极为低下，实验中暂且忽略效率上的差异，仅从准确率方面考量，观察本系统的版面分析模块的效果差异。实验结果如
-\subsection{自训练字符库优化}
+\subsection{版面分析优化}
+由于大部分OCR引擎普遍在版面分析方面比较薄弱，尤其是对于特定场景下的版面分析更是乏力，因此，在选取版面分析的基础对比组的时候，我们选用的是目标图片与模板图片逐个像素对比的方法作为实验的“未优化方法”，这种方法首先效率就极为低下，实验中暂且忽略效率上的差异，仅从准确率方面考量，观察本系统的版面分析模块所带来的效果差异。
+\begin{table}[!htbp]
+  \tabcaption{版面分析优化效果对比}
+	\label{layout-analysis-optimization}
+	\centering
+	\vspace{10pt}
+  \renewcommand\arraystretch{1.5}  %这两行代码用来调整表格高度
+	\begin{tabular}{p{3cm}|p{3cm}|p{3cm}|p{3cm}}
+    \hline
+    \multicolumn{2}{c|}{硬件环境} & \multicolumn{2}{c}{软件环境} \\
+		\hline
+    CPU&GPU&操作系统&工具库 \\
+		\hline
+    Intel(R) Core(TM)  i7-4770K @ 3.50GHz & NVIDIA GeForce  GTX 760 & Microsoft  Windows 7 x64 & OpenCV  Tesseract \\
+    \hline
+	\end{tabular}
+\end{table}
+
+实验结果如\autoref{layout-analysis-optimization}所示，从对比实验中可以看到，经过版面分析模块优化之后，系统对版面的分析能力大大加强，优化后的版面匹配准确率达到了100\%，高准确率一方面有本系统的版面种类较少等客观原因，另外，也主要得益于以下几个优化：
+\begin{itemize}
+  \item 通过模板匹配的方法，截去了图片中的系统信息栏和侧边栏等干扰区域，提取了病历数据的主体；
+  \item 通过灰度化，二值化，腐蚀等方法，抹去了目标图片与模板图片在文字细节上的差异，突出了版面特征；
+  \item 通过将二值图片的黑白像素反转，并用图片矩阵点乘的方式作为相似性度量，高效而准确的判断版面相似性。
+\end{itemize}
+
+\subsection{字段提取优化}
+在\autoref{sec:experiment-design}中提到测试数据中对于每份病历包含约60个字段需要识别，这些字段分布在图片的各个位置，本系统通过图像的二值化、腐蚀等操作，将各个字段变成独立的连通域，之后再经过连通域分析，将各字段分割提取出来进行文字识别。本实验中，我们将整个图片直接识别成大段文字，然后从文本中提取相应字段，作为实验的对比方法（“未优化方法”），观察本系统的字段提取模块所带来的效果差异。
+\begin{table}[!htbp]
+  \tabcaption{字段提取优化效果对比}
+	\label{tokens-extraction}
+	\centering
+	\vspace{10pt}
+  \renewcommand\arraystretch{1.5}  %这两行代码用来调整表格高度
+	\begin{tabular}{p{3cm}|p{3cm}|p{3cm}|p{3cm}}
+    \hline
+    \multicolumn{2}{c|}{硬件环境} & \multicolumn{2}{c}{软件环境} \\
+		\hline
+    CPU&GPU&操作系统&工具库 \\
+		\hline
+    Intel(R) Core(TM)  i7-4770K @ 3.50GHz & NVIDIA GeForce  GTX 760 & Microsoft  Windows 7 x64 & OpenCV  Tesseract \\
+    \hline
+	\end{tabular}
+\end{table}
+
+实验结果如\autoref{tokens-extraction}所示，可以看到，本系统在字段提取方面的准确率上明显优于未优化方法。准确率提升主要得益于以下几项优化：
+\begin{itemize}
+  \item 图像的二值化、腐蚀、连通域分析方法将各个字段很好的分割开来，使得各个字段的边界非常明确，便于提取
+\end{itemize}
 
 \subsection{用户字典优化}
 \section{整体性能测试}
