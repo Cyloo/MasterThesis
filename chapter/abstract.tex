@@ -1,11 +1,22 @@
 ﻿\begin{cnabstract}
 %中文摘要内容
-\keywords{}
+数据挖掘和分析技术的蓬勃发展和大数据时代的到来，使得人们从海量数据中进行深度挖掘，全面精准地提取有用信息成为可能。
+各种形式的电子化医疗系统产生了体量庞大的医疗大数据，这些数据对于提升医疗质量有着重要的价值，因此，医疗数据的挖掘和分析已经成为了大数据技术的一个重要应用领域，受到越来越多的关注。
+
+与此同时，医疗数据中也存在着大量的纸质病历和旧电子病历数据，这些数据如何高效地进行归档，继而与现有电子化病历数据协作挖掘，一直是医疗数据挖掘与分析的前置难题。
+比较常见的解决方案是利用光学字符识别（Optical Character Recognition，OCR）系统，将纸质病历或就电子病历数据转化为电子化的文本数据进行归档，但是目前成熟的商用OCR软件普遍缺少对医疗数据的针对性解决方案，实际使用效果并不理想。
+
+本文基于开源的OCR解决方案Tesseract，辅以图像处理技术，加入版面分析、医疗数据训练集等的支持等，实现了一个针对真实应用场景的病历档案自动归档与分类系统。
+系统从读入病历图片数据，经历版面分析、图像预处理、文字识别、字段提取等步骤，到输出指定格式的电子化病历档案，全部自动化完成，这种端到端的解决方案，具有高效易用的特性，并通过实验证明其达到了90\%以上的识别精度，具备比较高的可靠性和实用价值。
+
+\keywords{版面分析， 图像处理， 光学字符识别， 中文字符识别}
 %\keywords{中国科学技术大学\enskip 学位论文\enskip \LaTeX{}~通用模板\enskip 学士\enskip 硕士\enskip 博士}
 \end{cnabstract}
 
 \begin{enabstract}
 %英文摘要内容
-\enkeywords{}
+The rapid development of data mining and analysis techniques, as well as the upcoming era of Big Data, making it possible for us to precisely extract useful information from a mass data cluster.
+
+\enkeywords{layout analysis, image processing, optical character recognition, Chinese character recognition}
 %\enkeywords{University of Science and Technology of China (USTC), Thesis, Universal \LaTeX{} Template, Bachelor, Master, PhD}
 \end{enabstract}
