@@ -9,16 +9,46 @@
 	\centering
 	\vspace{10pt}
   \renewcommand\arraystretch{1.5}  %这两行代码用来调整表格高度
-	\begin{tabular}{p{3cm}|p{3cm}|p{3cm}|p{3cm}}
+	\begin{tabularx}{\textwidth}{C|C|C|C}
+	\hline
+    \multicolumn{2}{c|}{硬件环境} & \multicolumn{2}{c}{软件环境}\\
+
+	\hline
+	CPU&GPU&操作系统&工具库 \\
+
     \hline
-    \multicolumn{2}{c|}{硬件环境} & \multicolumn{2}{c}{软件环境} \\
-		\hline
-    CPU&GPU&操作系统&工具库 \\
-		\hline
-    Intel(R) Core(TM)  i7-4770K @ 3.50GHz & NVIDIA GeForce  GTX 760 & Microsoft  Windows 7 x64 & OpenCV  Tesseract \\
-    \hline
+    %\cmidrule(r){1} \cmidrule(r){2} \cmidrule(r){3} \cmidrule(r){4}
+	\begin{tabular}[]{c}
+		%Intel(R) Core(TM) \\
+		Intel \textsuperscript{\textregistered} Core\texttrademark \\
+		i7-4770K @ \\
+		3.50GHz \\
 	\end{tabular}
+	&
+	\begin{tabular}[]{c}
+		NVIDIA  \\
+	 	GeForce GTX  \\
+	 	760 \\
+	\end{tabular}
+	&
+	\begin{tabular}[]{c}
+		Microsoft  \\
+	 	Windows 7 \\
+		x64 \\
+	\end{tabular}
+	&
+	\begin{tabular}[]{c}
+	OpenCV \\
+	Tesseract\\
+	\end{tabular}\\
+
+	\hline
+
+
+	%\end{tabular}
+	\end{tabularx}
 \end{table}
+
 
 \section{实验设计}
 \label{sec:experiment-design}
