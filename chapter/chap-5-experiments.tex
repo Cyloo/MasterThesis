@@ -35,13 +35,13 @@
 	\centering
 	\vspace{10pt}
   \renewcommand\arraystretch{1.5}  %这两行代码用来调整表格高度
-	\begin{tabular}{p{3cm}|p{3cm}|p{3cm}|p{3cm}}
+	\begin{tabular}{c||c|c|c|c}
     \hline
-    \multicolumn{2}{c|}{硬件环境} & \multicolumn{2}{c}{软件环境} \\
+    & 正确数 & 错误数 & 总数 & 准确率 \\
 		\hline
-    CPU&GPU&操作系统&工具库 \\
+    未优化方法 & 44 & 18 & 62 & 71.0\% \\
 		\hline
-    Intel(R) Core(TM)  i7-4770K @ 3.50GHz & NVIDIA GeForce  GTX 760 & Microsoft  Windows 7 x64 & OpenCV  Tesseract \\
+    优化后方法 & 62 & 0 & 62 & 100\% \\
     \hline
 	\end{tabular}
 \end{table}
@@ -61,13 +61,13 @@
 	\centering
 	\vspace{10pt}
   \renewcommand\arraystretch{1.5}  %这两行代码用来调整表格高度
-	\begin{tabular}{p{3cm}|p{3cm}|p{3cm}|p{3cm}}
+	\begin{tabular}{c||c|c|c|c}
     \hline
-    \multicolumn{2}{c|}{硬件环境} & \multicolumn{2}{c}{软件环境} \\
+    & 正确数 & 错误数 & 总数 & 准确率 \\
 		\hline
-    CPU&GPU&操作系统&工具库 \\
+    未优化方法 & 325 & 147 & 472 & 68.9\% \\
 		\hline
-    Intel(R) Core(TM)  i7-4770K @ 3.50GHz & NVIDIA GeForce  GTX 760 & Microsoft  Windows 7 x64 & OpenCV  Tesseract \\
+    优化后方法 & 443 & 29 & 472 & 93.9\% \\
     \hline
 	\end{tabular}
 \end{table}
@@ -79,20 +79,28 @@
 \end{itemize}
 
 \subsection{文字识别优化}
-对于具体的文本识别，系统从预处理、训练字符库生成、用户字典以及后处理等多方面进行了准确性优化，这部分实验设计中，我们分别去除各个单项优化，构成实验组，与综合优化后的结果（作为对照组）做准确性的比较，来观察各单项优化的效果。
+对于具体的文本识别，系统从预处理、训练字符库生成、用户字典以及后处理等多方面进行了识别准确性优化，这部分实验设计中，我们分别去除各个单项优化，构成实验组，与综合优化后的结果（作为对照组）做准确性的比较，来观察各单项优化的效果。
 \begin{table}[!htbp]
   \tabcaption{文字识别优化效果对比}
 	\label{ocr-optimization}
 	\centering
 	\vspace{10pt}
   \renewcommand\arraystretch{1.5}  %这两行代码用来调整表格高度
-	\begin{tabular}{p{3cm}|p{3cm}|p{3cm}|p{3cm}}
+	\begin{tabular}{c||c|c|c|c}
     \hline
-    \multicolumn{2}{c|}{硬件环境} & \multicolumn{2}{c}{软件环境} \\
+    & 正确数 & 错误数 & 总数 & 准确率 \\
 		\hline
-    CPU&GPU&操作系统&工具库 \\
+    综合优化方法 & 18420 & 1957 & 20377 & 90.4\% \\
 		\hline
-    Intel(R) Core(TM)  i7-4770K @ 3.50GHz & NVIDIA GeForce  GTX 760 & Microsoft  Windows 7 x64 & OpenCV  Tesseract \\
+    去除用户字典 & 17625 & 2752 & 20377 & 86.5\% \\
+		\hline
+    去除后处理 & 17937 & 2440 & 20377 & 87.9\% \\
+		\hline
+    去除医疗训练集 & 16812 & 3565 & 20377 & 82.5\% \\
+		\hline
+    去除图像预处理 & 13082 & 7295 & 20377 & 64.2\% \\
+		\hline
+    去除所有优化 & 8652 & 11725 & 20377 & 42.5\% \\
     \hline
 	\end{tabular}
 \end{table}
