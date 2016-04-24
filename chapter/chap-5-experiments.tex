@@ -109,13 +109,15 @@
 	\centering
 	\vspace{10pt}
   \renewcommand\arraystretch{1.5}  %这两行代码用来调整表格高度
-	\begin{tabular}{p{3cm}|p{3cm}|p{3cm}|p{3cm}}
+	\begin{tabular}{c|c|c|c|c|c|c}
     \hline
-    \multicolumn{2}{c|}{硬件环境} & \multicolumn{2}{c}{软件环境} \\
-		\hline
-    CPU&GPU&操作系统&工具库 \\
-		\hline
-    Intel(R) Core(TM)  i7-4770K @ 3.50GHz & NVIDIA GeForce  GTX 760 & Microsoft  Windows 7 x64 & OpenCV  Tesseract \\
+    模块 & 正确 & 错误 & 总数 & 正确率 & 总耗时(s) & 平均耗时(s/份) \\
+    \hline
+    版面分析 & 62 & 0 & 62 & 100\% & 20.3 & 2.5 \\
+    \hline
+    字段提取 & 443 & 29 & 472 & 93.9\% & 31.2 & 3.9 \\
+    \hline
+    文字识别 & 18420 & 1957 & 20377 & 90.4\% & 1634.4 & 204.3 \\
     \hline
 	\end{tabular}
 \end{table}
