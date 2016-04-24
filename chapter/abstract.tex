@@ -6,7 +6,7 @@
 与此同时，医疗数据中也存在着大量的纸质病历和旧电子病历数据，这些数据如何高效地进行归档，继而与现有电子化病历数据协作挖掘，一直是医疗数据挖掘与分析的前置难题。
 比较常见的解决方案是利用光学字符识别（Optical Character Recognition，OCR）系统，将纸质病历或就电子病历数据转化为电子化的文本数据进行归档，但是目前成熟的商用OCR软件普遍缺少对医疗数据的针对性解决方案，实际使用效果并不理想。
 
-本文基于开源的OCR解决方案Tesseract，辅以图像处理技术，加入版面分析、医疗数据训练集等的支持等，实现了一个针对真实应用场景的病历档案自动归档与分类系统。
+本文的主要工作是基于开源的OCR解决方案Tesseract，辅以图像处理技术，加入版面分析、医疗数据训练集等的支持等，设计和实现了一个针对真实应用场景的印刷体病历档案自动归档与分类系统。
 系统从读入病历图片数据，经历版面分析、图像预处理、文字识别、字段提取等步骤，到输出指定格式的电子化病历档案，全部自动化完成，这种端到端的解决方案，具有高效易用的特性，并通过实验证明其达到了90\%以上的识别精度，具备比较高的可靠性和实用价值。
 
 \keywords{版面分析， 图像处理， 光学字符识别， 中文字符识别}
@@ -15,7 +15,20 @@
 
 \begin{enabstract}
 %英文摘要内容
-The rapid development of data mining and analysis techniques, as well as the upcoming era of Big Data, making it possible for us to precisely extract useful information from a mass data cluster.
+The rapid development of data mining and analysis techniques, as well as the upcoming era of Big Data, makes it possible for us to precisely extract useful information from a mass data cluster.
+Various forms of eletronic medical record systems have stored a large volume of medical data, which is considered to be the key of improving the quality of medical care.
+Hence, the mining and analysis of medical data have become an important application in the field of big data technology, drawing more and more research attention.
+
+At the same time, a big share of the medical data are paper records, or stored in old electronic medical record systems.
+How to efficiently archive these data into the new electronic medical record systems, so that they can be coorperated with the new medical records to extract useful medical information, has always been a problem in the field of medical data mining and analysis.
+A common solution is using the Optical Character Recognition(OCR) system, transforming image data in paper or in old medical record systems, into records of text in new medical record systems.
+But mature comercial OCR softwares at the present generally lack of medical-data-targeted optimization, thus cannot achieve ideal performances.
+
+The main work of this paper is designing and implementing an automatic archiving system for printed medical data, aimed at real-world senarios.
+The system is based on Tesseract, a famous open-source OCR engine, integrated with image processing and layout analysis techniques, as well as the support of medical-specific training dataset.
+Starting from loading the patients' profiles images, the system goes through layout analysis, image pre-processing, character recoginition, field extraction and several other procedures, finally outputs the medical records with specific format.
+The system is an end-to end solution, so that it's very efficient and easy to use.
+Experiments also show that the system achieves an over 90\% accuracy of character recoginition, indicating that the system has high reliability and practical value.
 
 \enkeywords{layout analysis, image processing, optical character recognition, Chinese character recognition}
 %\enkeywords{University of Science and Technology of China (USTC), Thesis, Universal \LaTeX{} Template, Bachelor, Master, PhD}
