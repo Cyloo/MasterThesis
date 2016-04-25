@@ -1,4 +1,3 @@
-// Include automatically generated configuration file if running autoconf
 #ifdef HAVE_CONFIG_H
 #include "config_auto.h"
 #endif
@@ -95,7 +94,7 @@ static string token_names[] = {
 	"签名人姓名",
 	"病历信息"
 };
-const static token_unit tokens[] = {
+const static token_unit layout1_tokens[] = {
 	{ "姓名", 0 },
 	{ "性别", 1 },
 	{ "出生日期", 2 },
@@ -143,18 +142,56 @@ const static token_unit tokens[] = {
 	{ "Emai1", 35 },
 	{ "联系人姓名", 36 },
 	{ "联系人手机", 37 },
-	{ "关系", 38 },
-	{ "职业", 39 },
-	{ "单位名称", 40 },
-	{ "单位电话", 41 },
-	{ "单位住址", 42 },
-	{ "单位邮编", 43 },
-	{ "计费类型", 44 },
-	{ "医保号", 45 },
-	{ "随访号", 46 },
-	{ "军人", 47 },
-	{ "军兵种", 48 }
+	{ "联系人住址", 38 },
+	{ "关系", 39 },
+	{ "职业", 40 },
+	{ "单位名称", 41 },
+	{ "单位电话", 42 },
+	{ "单位住址", 43 },
+	{ "单位邮编", 44 },
+	{ "计费类型", 45 },
+	{ "医保号", 46 },
+	{ "随访号", 47 },
+	{ "军人", 48 },
+	{ "军兵种", 49 }
 };
+
+const static token_unit layout2_tokens[] = {
+	{ "姓名", 0 },
+	{ "性别", 1 },
+	{ "年龄", 3 },
+	{ "籍贯", 8 },
+	{ "藉贯", 8 },
+	{ "出生地", 9 },
+	{ "民族", 10 },
+	{ "文化程度", 11 },
+	{ "宗教信仰", 12 },
+	{ "家庭地址", 16 },
+	{ "户口地址", 17 },
+	{ "门诊号", 30 },
+	{ "住院次数", 31 },
+	{ "手机", 33 },
+	{ "联系人姓名", 36 },
+	{ "联系人手机", 37 },
+	{ "联系人住址", 38 },
+	{ "职业", 40 },
+	{ "婚否", 50 },
+	{ "工作单位", 51 },
+	{ "临床路径", 52 },
+	{ "病种名", 53 },
+	{ "加入单病种", 54 },
+	{ "特殊病人", 55 },
+	{ "特殊患者", 56 },
+	{ "入院日期", 57 },
+	{ "采史日期", 58 },
+	{ "病史陈述者", 59 },
+	{ "可靠程度", 60 },
+	{ "供史人关系", 61 },
+	{ "供史人电话", 62 },
+	{ "供史人地址", 63 },
+	{ "签名人姓名", 64 },
+};
+
 const int tokens_length = sizeof(token_names) / sizeof(token_names[0]);
 
 string Join_Tokens(string str[], int length)
@@ -166,18 +203,33 @@ string Join_Tokens(string str[], int length)
 	return result;
 }
 
-bool insert_token(string str, string output[], int length)
+bool insert_token(string str, string output[], int length, int layoutType)
 {
 	for (int i = 0; i < length; i++)
 	{
-		if (startWith(str, tokens[i].name) && output[tokens[i].index] == "")
+		if (layoutType == 1)
 		{
-			int index = str.find('=', tokens[i].name.length() - 1);
-			if (index == str.length() - 1)
+			if (startWith(str, layout1_tokens[i].name) && output[layout1_tokens[i].index] == "")
+			{
+				int index = str.find('=', layout1_tokens[i].name.length() - 1);
+				if (index == str.length() - 1)
+					return 1;
+				string result = str.substr(index + 1);
+				output[layout1_tokens[i].index] = result;
 				return 1;
-			string result = str.substr(index + 1);
-			output[tokens[i].index] = result;
-			return 1;
+			}
+		}
+		else if (layoutType == 2)
+		{
+			if (startWith(str, layout2_tokens[i].name) && output[layout2_tokens[i].index] == "")
+			{
+				int index = str.find('=', layout2_tokens[i].name.length() - 1);
+				if (index == str.length() - 1)
+					return 1;
+				string result = str.substr(index + 1);
+				output[layout2_tokens[i].index] = result;
+				return 1;
+			}
 		}
 	}
 	return 0;
@@ -334,7 +386,7 @@ int main(int argc, char **argv)
 
 	string output[tokens_length];
 
-	Mat src = imread("bingli.jpg", 0);
+	Mat src = imread("bingli2.jpg", 0);
 	Mat dst;
 	Mat eroded, binary_coded;
 
@@ -419,6 +471,9 @@ int main(int argc, char **argv)
 	//api->SetImage(pix);
 	//api->SetPageSegMode(tesseract::PSM_SINGLE_BLOCK);
 
+	Mat test = roi(boundRect[0]);
+	imshow("test", test);
+
 	for (int i = 1; i < boundRect.size(); i++)
 	{
 		Mat example = roi(boundRect[i]);
@@ -436,7 +491,10 @@ int main(int argc, char **argv)
 		string result = Trim(resulttemp);
 		//printf("region num%d is: %s\n", i, &result);
 		cout << "region" << i << " is: " << result << endl;
-		insert_token(result, output, sizeof(tokens) / sizeof(tokens[0]));
+		if(layoutType == 1)
+			insert_token(result, output, sizeof(layout1_tokens) / sizeof(layout1_tokens[0]), layoutType);
+		else
+			insert_token(result, output, sizeof(layout2_tokens) / sizeof(layout2_tokens[0]), layoutType);
 		fprintf(fp, "region num%d is: %s\n", i, outText);
 		delete[] outText;
 	}
