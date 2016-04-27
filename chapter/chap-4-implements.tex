@@ -633,7 +633,7 @@ void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=
 \end{figure}
 
 \subsubsection*{不同划分方法的比较}
-对于同一段文本块，它即可能被划分为$A$、$B$两个单词，也有可能被划分为$C$、$D$、$E$三个单词，这时如何比较两种划分的优劣呢？如果简单的将两边每个单词的置信度相加比较肯定是不当的，因为第二种划分有3个单词，置信度相加以后的和很可能会比只有两个单词的置信度之和要大；那么将置信度之和除以单词数目之后再比较呢？这种均分置信度也有问题，因为各个单词的长度并不相等，各自在整个文本块中所占的“比重”并不一样，直接平均也不可取。因此，最终采用的计算方案如\autoref{eq:confidence-comparison}所示，由于同一段文本块的总长度$len$一定，每个单词的置信权重取决于它在整个文本块中的“比重”。
+对于同一段文本块，它即可能被划分为$A$、$B$两个单词，也有可能被划分为$C$、$D$、$E$三个单词，这时如何比较两种划分的优劣呢？如果简单的将两边每个单词的置信度相加比较肯定是不当的，因为第二种划分有3个单词，置信度相加以后的和很可能会比只有两个单词的置信度之和要大；那么将置信度之和除以单词数目之后再比较呢？这种均分置信度也存在问题，因为各个单词的长度并不相等，各自在整个文本块中所占的“比重”并不一样，直接平均也不可取。因此，最终采用的计算方案如\autoref{eq:confidence-comparison}所示，由于同一段文本块的总长度$len$一定，每个单词的置信权重取决于它在整个文本块中的“比重”。
 \begin{equation} \label{eq:confidence-comparison}
 	\begin{split}
 		&Conf(AB) = Conf(A)\frac{Len(A)}{len} + Conf(B)\frac{Len(B)}{len} \\
@@ -644,11 +644,11 @@ void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=
 \subsubsection*{自适应分类器}
 在Tesseract中，有两个分类器：静态分类器（static classifier）和自适应分类器（adaptive classifier）。由于静态分类器涉及到多种字体，通用性比较强，但是其区分相近字符、字符与非字符的能力被削弱。此时，由于每页文档内的字符的个数有限，利用静态分类器的结果可以训练出对字体更敏感的自适应分类器，可以提高分类能力。%这几句摘自http://blog.csdn.net/viewcode/article/details/7790065
 Tesseract在识别时会做两遍识别，第一遍时，识别系统会尝试着轮流识别每个单词。每当识别一个有可信度的单词时，这个单词就会被加入到一个自适应分类器（adaptive classifier）中，作为训练数据。这样这个自适应分类器就能在识别接下来的文字时有更高的精度。如果只过一遍网络，那么自适应分类器学到的新知识就无法应用到当前的文本中，因此，需要过第二遍识别，这一次识别的重点是第一遍中没有能够很好识别的那些文字。%这几句与“整体流程”小节一样。
-因此，自适应分类器让Tesseract具有了即时（on-the-fly）的学习能力。
+因此，自适应分类器让Tesseract具有了即时（on-the-fly）学习的能力。
 
 \subsubsection*{分类器模型}
 Tesseract中采用的分类器模型是k近邻（k-Nearest Neighbour，KNN），采用的距离度量是在特征空间里的欧几里得距离，k近邻是机器学习中比较成熟的分类模型，它的核心思路是：如果一个样本在特征空间里面k个最相似的样本中的大多数属于某一个类别，那么该样本也属于这个类别。k近邻虽然实现简单，但是它有 一个很大的缺点就是计算量比较大，因为每个样本需要与其他所有的样本进行距离计算，当特征空间维数大或者训练数据容量大时，无疑是非常耗时的。这也是Tesseract在识别速度上不如市面上很多商业化OCR软件的原因之一。
-另外，Tesseract为了支持阿拉伯语专门实现了一个卷积神经网络（Convolutional neural networks，CNN）分类器，在阿拉伯语上表现很好，但在欧洲语言上，性能和效果都不行。%这一句摘自http://zhuanlan.zhihu.com/p/20231514
+另外，Tesseract为了支持阿拉伯语专门实现了一个卷积神经网络（Convolutional neural networks，CNN）分类器，在阿拉伯语的识别上具有较好的表现，但在欧洲语言上，性能和效果都不理想。%这一句摘自http://zhuanlan.zhihu.com/p/20231514
 
 \subsection{字符库训练}
 Tesseract官方提供了一个中文字符库\footnote{官方提供的多种语言字符库下载：https://github.com/tesseract-ocr/tessdata}，用来对中文进行识别，这个字符库中包含了印刷体中文里的很多种字体，是一个大而全的字符库，在针对特定问题时，准确率一般。以医学档案为例，它有如下几个特点：
@@ -657,7 +657,7 @@ Tesseract官方提供了一个中文字符库\footnote{官方提供的多种语�
 	\item 病历数据中，有很多词会大量重复出现，例如各种字段名，如姓名、性别等；
 	\item 仅本系统而言，病历数据的字体都为宋体，并不需要多种字体的识别。
 \end{itemize}
-上面几个特点是很宝贵的先验知识，但是官方的中文字符库却无法利用上。
+上面几个特点是很宝贵的先验知识，但是官方的中文字符库却无法利用。
 
 所幸Tesseract提供了训练新字符库的接口\footnote{有关Tesseract语言训练的官方文档：https://github.com/tesseract-ocr/tesseract/wiki/TrainingTesseract}，我们可以针对上面提到的几个特点，有针对性地训练字符库。具体来说，字符库的训练可以分为以下几步：
 \begin{itemize}
@@ -716,7 +716,7 @@ Tesseract也是支持添加用户字典的，在Tesseract中，字典数据以DA
 	\item LibXL方式。LibXL是一个收费的EXCEL库\footnote{LibXL网址：http://www.libxl.com/}，优点是可以不依赖EXCEL来读取xls文件，操作简单，缺点当然是需要收费。
 	\item ODBC（Open Database Connectivity）方式。ODBC是微软提出的数据库访问接口标准，采用这种方式读取excel可以做丰富的数据库管理操作，缺点是读写速度慢，另外需要安装excel驱动程序。
 \end{itemize}
-我们需要存储的数据只是需要用excel作为简单的展示平台，本身并不需要其他的excel操作，因此以上几种方式事实上都是功能过剩，存储效率比较低，而且需要已经安装EXCEL，无法跨平台。本系统最后采用的解决方案是将病历数据存储为csv格式的文本文档，CSV（Comma-Separated Values），是一种文件存储格式，以纯文本形式来存储表格数据，它的这个特性带来了如下几个优点：
+我们需要存储的数据只是需要用excel作为简单的展示平台，本身并不需要其他的excel操作，因此以上几种方式事实上都是功能过剩，存储效率比较低，而且需要安装EXCEL，无法跨平台。本系统最后采用的解决方案是将病历数据存储为csv格式的文本文档，CSV（Comma-Separated Values），是一种文件存储格式，以纯文本形式来存储表格数据，它的这个特性带来了如下几个优点：
 \begin{itemize}
 	\item 读写速度快，因为它是一种纯文本格式，所以可以很快地进行文本读写操作；
 	\item 可以直接被EXCEL识别为正确的表格文件，让数据拥有更好的展示效果；
