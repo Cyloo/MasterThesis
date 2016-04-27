@@ -683,7 +683,7 @@ Tesseract官方提供了一个中文字符库\footnote{官方提供的多种语�
 Tesseract也是支持添加用户字典的，在Tesseract中，字典数据以DAWG（Direct Acyclic Word Graph）的形式存在，它们包括通用词组、高频词组、字符、标点等等，我们也可以利用Tesseract提供的工具，加入针对病历数据的用户字典，提升准确率。
 
 \subsection{其他细节}
-值得一提的是，在Windows平台，Tesseract识别的文本在显示时会出现大量的乱码问题，这是因为Windows平台默认的文本代码存储方式是UTF8-WithBOM，而Tesseract引擎识别后产出的文本是以标准UTF8格式的，直接输出势必会产生乱码。因此（在Windows平台）我们需要对文本进行转码，具体的转码步骤是先将UTF8转换成Unicode格式，然后将Unicode转换成Ansi字符标准格式，这两个转换函数可以在\citep{character-encoding}中到完整的代码和解释。
+值得一提的是，在Windows平台，Tesseract识别的文本在显示时会出现大量的乱码问题，这是因为Windows平台默认的文本代码存储方式是UTF8-WithBOM，而Tesseract引擎识别后产出的文本是以标准UTF8格式的，直接输出势必会产生乱码。因此（在Windows平台）我们需要对文本进行转码，具体的转码步骤是先将UTF8转换成Unicode格式，然后将Unicode转换成Ansi字符标准格式，这两个转换函数可以在\citep{character-encoding}中找到完整的代码和解释。
 
 \section{字段解析模块}  %2000字
 当含有文本的图片数据经过OCR模块以后，会被转换为文本，这些文本需要进行一定的加工，才能得到我们想要的各字段数据。总体来说，原始的文本需要经过数据清洗、字段匹配、目标文本提取等步骤。我们也可以认为这是数据的“后处理”过程。
