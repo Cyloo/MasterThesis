@@ -318,11 +318,7 @@ double threshold(InputArray src, OutputArray dst, double thresh, double maxval, 
 \end{lstlisting}
 固定阈值方法虽然实现简单，但是阈值需要人工选取，很难保证效果，当阈值选的太大时，会产生很多噪声，淹没主体（见\autoref{lena_binary_130}），阈值选的太小时，又会丢失大量的细节（见\autoref{lena_binary_70}），因此这种方法在具体实施时并不推荐。
 
-自适应阈值方法，函数原型为
-\begin{lstlisting}
-void adaptiveThreshold(InputArray src, OutputArray dst, double maxValue, int adaptiveMethod, int thresholdType, int blockSize, double C)
-\end{lstlisting}
-它根据像素的邻域块的像素值分布来确定该像素位置上的二值化阈值。这样做的好处在于每个像素位置处的二值化阈值不是固定不变的，而是由其周围邻域像素的分布来决定的。亮度较高的图像区域的二值化阈值通常会较高，而亮度较低的图像区域的二值化阈值则会相适应地变小。不同亮度、对比度、纹理的局部图像区域将会拥有相对应的局部二值化阈值。常用的局部自适应阈值有：1）局部邻域块的均值；2）局部邻域块的高斯加权和。%这一段摘自http://blog.csdn.net/icvpr/article/details/8515596
+自适应阈值方法，它的原理是根据每个像素的邻域像素值来确定当前像素的二值化阈值，它的优点是每个像素的二值化阈值是动态的，由像素周围区域像素的分布确定。对于高亮度区域，对应的二值化阈值一般也会较高，反之二值化阈值就会相应的较小。这样不同亮度、对比度和一些细节纹理都会拥有与之匹配的局部二值化阈值\citep{binarization}。
 自适应阈值二值化效果见\autoref{lena_binary_adaptive}，图片即保证了主体的明确，没有很多噪声，又保留了大部分的细节。
 
 \begin{figure}[htbp]
@@ -548,7 +544,7 @@ void adaptiveThreshold(InputArray src, OutputArray dst, double maxValue, int ada
 			P(x) = f_0\frac{x-x_1}{x_0-x_1}+f_1\frac{x-x_0}{x_1-x_0}
 		\end{equation}
 		其中，$x_0$、$x_1$分别为已知的两个像素点的坐标，$f_0$、$f_1$为它们对应的像素值，那么新像素点$x$的像素值为$P(x)$。
-	\item 双线性插值，它可以被看做是线性插值的一个拓展，核心思想是在两个方向上各进行一次线性插值，叠加结果得到新像素点的像素值。
+	\item 双线性插值，它可以被看做是拓展以后的线性插值，主要思想是在两个方向分别进行线性插值，叠加结果得到新像素点的像素值。
 \end{itemize}
 除此之外，还有双三次插值、分形插值（Fractal Interpolation）\citep{barnsley1986fractal}、边缘定向插值（Edge-directed Interpolation）\citep{li2001new}等，这里就不再一一介绍。
 OpenCV中进行图片放缩的时候，支持指定自带的几种插值方法，函数原型是：
@@ -687,27 +683,7 @@ Tesseract官方提供了一个中文字符库\footnote{官方提供的多种语�
 Tesseract也是支持添加用户字典的，在Tesseract中，字典数据以DAWG（Direct Acyclic Word Graph）的形式存在，它们包括通用词组、高频词组、字符、标点等等，我们也可以利用Tesseract提供的工具，加入针对病历数据的用户字典，提升准确率。
 
 \subsection{其他细节}
-值得一提的是，在Windows平台，Tesseract识别的文本在显示时会出现大量的乱码问题，这是因为Windows平台默认的文本代码存储方式是UTF8-WithBOM，而Tesseract引擎识别后产出的文本是以标准UTF8格式的，直接输出势必会产生乱码。因此（在Windows平台）我们需要对文本进行转码，具体的转码步骤是先将UTF8转换成Unicode格式，然后将Unicode转换成Ansi字符标准格式，这两个转换函数如下所示：
-\begin{lstlisting}[numbers=none]
-wchar_t * Utf_8ToUnicode(char* szU8)
-{
-	int wcsLen = ::MultiByteToWideChar(CP_UTF8, NULL, szU8, strlen(szU8), NULL, 0);
-	wchar_t* wszString = new wchar_t[wcsLen + 1];
-	::MultiByteToWideChar(CP_UTF8, NULL, szU8, strlen(szU8), wszString, wcsLen);
-	wszString[wcsLen] = '\0';
-	return wszString;
-}
-
-char* UnicodeToAnsi( const wchar_t* szStr )
-{
-	int nLen = WideCharToMultiByte( CP_ACP, 0, szStr, -1, NULL, 0, NULL, NULL );
-	if (nLen == 0)
-		return NULL;
-	char* pResult = new char[nLen];
-	WideCharToMultiByte( CP_ACP, 0, szStr, -1, pResult, nLen, NULL, NULL );
-	return pResult;
-}
-\end{lstlisting}
+值得一提的是，在Windows平台，Tesseract识别的文本在显示时会出现大量的乱码问题，这是因为Windows平台默认的文本代码存储方式是UTF8-WithBOM，而Tesseract引擎识别后产出的文本是以标准UTF8格式的，直接输出势必会产生乱码。因此（在Windows平台）我们需要对文本进行转码，具体的转码步骤是先将UTF8转换成Unicode格式，然后将Unicode转换成Ansi字符标准格式，这两个转换函数可以在\citep{character-encoding}中到完整的代码和解释。
 
 \section{字段解析模块}  %2000字
 当含有文本的图片数据经过OCR模块以后，会被转换为文本，这些文本需要进行一定的加工，才能得到我们想要的各字段数据。总体来说，原始的文本需要经过数据清洗、字段匹配、目标文本提取等步骤。我们也可以认为这是数据的“后处理”过程。
