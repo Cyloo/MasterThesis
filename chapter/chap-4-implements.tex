@@ -3,7 +3,7 @@
 前一章中，我们已经介绍了整个系统的架构设计，这一章我们会对系统各个模块的一些实现细节进行详细阐述，主要涉及到方案选取、环境部署、算法设计与实现、系统性能调优等。一方面是对整体架构设计的补充论述，另一方面，我们会更多的讨论在实现过程中遇到的各种问题，以及如何解决这些问题。整体上，我们会倾向去寻找已有的成熟解决方案，辅以适当的修改和优化。遵循这个原则，既保证了整个系统有一定的成熟度，又对病历数据的识别有较强的针对性。这一部分的阐述比较详细，按照这一章的指引，有一定计算机编程基础的读者，应该能实现整个系统的基本复现。
 
 \section{核心方案}
-医学档案的自动生成与归类，其涉及到的最核心的两项技术就是图像处理和文字识别，可以说这两项技术的解决方案选取和完成度，决定了整个系统的性能基线，因此，我们必须综合考量备选的各个方案，从性能、稳定性、易用性等维度，择优采用。接下来，我们就这两项技术的方案选取和部署来展开讨论。
+医学档案的自动生成与归类，其涉及到的最核心的两项技术就是图像处理和文字识别，可以说这两项技术的解决方案的选取和完成度，决定了整个系统的性能基线，因此，我们必须综合考量备选的各个方案，从性能、稳定性、易用性等维度，择优采用。接下来，我们就这两项技术的方案选取和部署来展开讨论。
 
 \subsection{图像处理}
 \subsubsection*{方案选取}
@@ -21,7 +21,7 @@
 OpenCV（Open Source Computer Vision）是一个旨在完成实时机器视觉（Real-time Computer Vision）的函数库，最早是由英特尔研究中心开发，后被Will Garage接手，现在是由Itseez团队负责维护，是一个跨平台的免费开源图像处理库\citep{wiki:OpenCV}。OpenCV最早于2000年发行，目前仍在更新和维护，最新的稳定版是于2015年12月发布的OpenCV 3.1更新。它的代码由C/C++写就，同时提供了Python、Java以及Matlab等语言的接口\citep{wiki:OpenCV}。自其发布后的15年来，OpenCV一直以它良好的性能和高度的稳定性著称，是使用最为广泛的图像处理库。这也意味着它有着大量的用户测试经验和成熟的社区支持，这无疑为我们解决项目中的棘手问题提供了基础保障，具体来说，本系统的数据加载模块、版面分析模块、预处理模块都需要用到OpenCV提供的函数方法支持，我们也将在后面的模块详细介绍中，体会到OpenCV的强大功能。
 
 \subsubsection*{环境部署}
-OpenCV是有很好的多平台支持（Windows，Linux，Mac等），环境的部署也比较简单，这里我们仅以Windows平台下Visual Studio 2013的opencv配置使用为例，做一个部署步骤的简要展示：
+OpenCV是有很好的多平台支持（Windows，Linux，Mac等）特性，环境部署也比较简单，这里我们仅以Windows平台下Visual Studio 2013的opencv配置使用为例，做一个部署步骤的简要展示：
 \begin{itemize}
   \item 从\href{http://opencv.org/}{OpenCV官方主页}下载最新的OpenCV 3.1安装包，解压安装包完成安装。并将OpenCV加入系统环境变量。
   \item 新建一个Visual Studio C++工程，在工程配置属性中的“包含目录”中添加OpenCV的include文件夹，在“库目录”中加入OpenCV的lib文件夹，在“链接器”的附加依赖中添加opencvworld310d.lib和opencvworld310.lib（分别对应debug和release编译选项）。
@@ -46,9 +46,9 @@ int main(void)
 
 \subsection{字符识别}
 \subsubsection*{方案选取}
-字符识别（Character Recognition），又称光学字符识别（Optical Character Recognition，OCR），是指将印刷或手写的文字转换成机器编码（machine-encoded）文本的过程，它被广泛应用于纸质印刷的数据录入中，例如护照文件、发票、信件、银行存单等，当这些纸质文件被转换成了机器编码的文本以后，无论是在编辑修改、搜索、存储，还是在后续的数据挖掘，文字转语音等过程中，都变得相对便捷和高效。OCR是模式识别（Pattern Recognition）、（Artificial Intelligence）和计算机视觉（Computer Vision）领域中的典型应用\citep{wiki:OCR}。
+字符识别（Character Recognition），又称光学字符识别（Optical Character Recognition，OCR），是指将印刷或手写的文字转换成机器编码（machine-encoded）文本的过程，它被广泛应用于纸质印刷的数据录入中，例如护照文件、发票、信件、银行存单等，当这些纸质文件被转换成了机器编码的文本以后，无论是在编辑修改、搜索、存储，还是在后续的数据挖掘，文字转语音等过程中，都变得相对便捷和高效。OCR是模式识别（Pattern Recognition）、人工智能（Artificial Intelligence）和计算机视觉（Computer Vision）领域中的典型应用\citep{wiki:OCR}。
 
-具体到本系统，我们是要讲光学字符识别技术应用到纸质或截图保存的病历数据中，这项技术会在OCR模块中用到，在技术实现上与其他基于光学字符识别的应用并没有本质的不同，因此我们可以采用已有的OCR解决方案。目前比较主流的OCR解决方案有ABBYY FineReader、Microsoft Office内置的OCR模块、Tesseract、FreeOCR等，维基百科中有对各种OCR软件的详细对比\citep{wiki:OCRcomparison}，同时，也有组织对于最好的OCR软件做过一个排名（见\autoref{pic:ocr-software-comparison}），从这个排名中我们可以看到，好的商用OCR软件一般都售价不菲（图片中的价格仅针对个人用户），同时由于病历数据的版面结构复杂，并没有一个比较通用的版面分析方案，所以这些商用OCR软件无法直接应用到系统中，因此，我们需要一个有提供编程接口（Application Programming Interface，API）的OCR解决方案，方便定制特定场景下的OCR。能提供编程接口的OCR引擎中，Tesseract是其中的首选。
+具体到本系统，我们是要将光学字符识别技术应用到纸质或截图保存的病历数据中，这项技术会在OCR模块中用到，在技术实现上与其他基于光学字符识别的应用并没有本质的不同，因此我们可以采用已有的OCR解决方案。目前比较主流的OCR解决方案有ABBYY FineReader、Microsoft Office内置的OCR模块、Tesseract、FreeOCR等，维基百科中有对各种OCR软件的详细对比\citep{wiki:OCRcomparison}，同时，也有组织对于最好的OCR软件做过一个排名（见\autoref{pic:ocr-software-comparison}），从这个排名中我们可以看到，好的商用OCR软件一般都售价不菲（图片中的价格仅针对个人用户），同时由于病历数据的版面结构复杂，并没有一个比较通用的版面分析方案，所以这些商用OCR软件无法直接应用到系统中，因此，本系统需要一个有提供编程接口（Application Programming Interface，API）的OCR解决方案，方便定制特定场景下的OCR。能提供编程接口的OCR引擎中，Tesseract是其中的首选。
 
 \begin{figure}
 	\centering
@@ -118,25 +118,25 @@ int main()
   }
 }
 \end{lstlisting}
-其中，some\_folder\_path就是某个病人的病历文件夹名字，filenames中存储的就是文件夹底下的图片名字。
+其中，some\_folder\_path就是某个病人的病历文件夹路径，filenames中存储的就是文件夹底下的图片名字。
 
 \section{版面分析模块}  % 3000字
 文档版面分析（Document Layout Analysis），是指在含有文本的图像中识别出感兴趣区域（Regions of Interest，ROI）的过程。一个文字识别系统需要将文字从非文字的区域中划分出来，同时保持文本的相对顺序\citep{baird1992anatomy}。在一个文件中检测和标记出文本区域和其他非文本区域的过程叫做几何学版面分析（Geometric Layout Analysis）\citep{cattoni1998geometric}。但是不同的文本区域在文档中代表的含义并不相同，例如有些文本是文档的标题，有些是文档的注释，有些是文档的主体等等，具体到病历档案归类系统中，就是文本块所属的字段是各不相同的，这种识别文字在文档中的含义的过程叫做逻辑学版面分析（Logical Layout Analysis）\citep{haralick1994document}。
 
-（几何学）版面分析算法总体上可以分为三类\citep{mao2003document}：
+几何学版面分析算法总体上可以分为三类\citep{mao2003document}：
 \begin{itemize}
 	\item 自顶向下方法，算法从整张图片开始，迭代地将图片不断分割成更小的区域，直到程序达到某种终止条件时停止。它的优点是操作简单、速度较快，但是难以适应比较复杂的版面\citep{nagy1992prototype}\citep{baird1990image}。
 	\item 自底向上方法，与自顶向下的方法相反，算法从每一个图片像素开始，根据一定的聚即规则，逐渐聚集相邻的区域形成单词，语句和段落。它的优点是能够适应比较复杂的版面，缺点是速度比较慢，难以确定一个比较好的聚集规则\citep{o1993document}\citep{kise1998segmentation}。
 	\item 混合型方法，它可以被看做是自顶向下和自底向上这两种方法的混合\citep{pavlidis1992page}。
 \end{itemize}
 
-在真实的应用场景中，由于实际文档的多样性，复杂性，因此，目前还没有一个固定的，最优的切割模型，需要我们根据实际问题和需求，有针对性的设计版面分析方法。在\autoref{ssec:framework-segmentation-analysis}中我们已经提到，系统的版面分析模块非常重要，需要完成以下三大功能：
+在真实的应用场景中，由于实际文档的多样性，复杂性，目前还没有一个固定的，最优的切割模型，需要我们根据实际问题和需求，有针对性的设计版面分析方法。在\autoref{ssec:framework-segmentation-analysis}中我们已经提到，系统的版面分析模块非常重要，需要完成以下三大功能：
 \begin{itemize}
 	\item 对病历图片进行二次分类；
 	\item 剔除图片中的干扰信息，获得病历数据主体；
 	\item 剔除主体内容中的空白，提取出各个字段。
 \end{itemize}
-这三个功能我们可以简单归纳为图片分类、主体保留、字段提取。这三者的顺序是从逻辑上出发来区分的，在实际代码实现中，我们是先实现了主体保留，此时再对图片分类，最后做字段提取的工作。接下来，我们分别讨论这三个功能如何实现。
+这三个功能我们可以简单归纳为图片分类、主体保留、字段提取。这三者的顺序是从逻辑上出发来排列的，在实际代码实现中，我们是先实现了主体保留，然后再对图片分类，最后做字段提取的工作。接下来，我们分别讨论这三个功能如何实现。
 
 \subsection{主体保留}
 图片中除了我们需要的病历主体信息以外，一般还会有冗余的干扰信息，以\autoref{pic:input-image-1}为例，图片的中间部分是病人病历数据的主体，而图片上部则是一些电子病历系统的系统信息，左侧则是一个侧边栏导航，这些都是与病历无关的，我们需要将其剔除，保留主体，这里需要用到图片的裁剪。
@@ -153,7 +153,7 @@ cut = origin( Rect(x0, y0, width, height) );
 \subsubsection*{模板匹配}
 需要注意的是，在确定的病历系统中，其系统信息和侧边栏导航的内容和位置是相对固定的，我们可以根据这一点，利用模板匹配的方式，确定系统信息栏和侧边导航栏的位置，并进行裁剪。
 
-模板匹配（Template Matching）\citep{template-matching}，是一项在原始图片中寻找匹配模板图片的小区域的技术。在OpenCV中，提供了模板匹配的函数
+模板匹配（Template Matching）\citep{template-matching}，是一项在原始图片中寻找匹配模板图片的小区域的技术。在OpenCV中，提供了模板匹配的函数：
 \begin{lstlisting}
 void matchTemplate(InputArray image, InputArray templ, OutputArray result, int method)
 \end{lstlisting}
@@ -176,7 +176,7 @@ R(x,y)=\sum_{x^{'},y^{'}}(T(x^{'},y^{'})\cdot I(x+x^{'},y+y^{'}))
 	\label{pic:title-template}
 \end{figure}
 
-对于病历图片中的系统信息栏，我们可以通过截取原图中系统信息栏的部分保存下来，作为模板，如\autoref{pic:title-template}所示。然后运用模板匹配算法，剪裁掉原图中上方系统信息栏部分，代码如下：（其中算子采用平方差算子，输入参数src代表原图，\_template代表模板，template\_type为模板类型，返回值roi为截掉模板之后的图像。）
+对于病历图片中的系统信息栏，我们可以通过截取原图中系统信息栏的部分，保存下来作为模板，如\autoref{pic:title-template}所示。然后运用模板匹配算法，剪裁掉原图中上方系统信息栏部分，代码如下：（其中算子采用平方差算子，输入参数src代表原图，\_template代表模板，template\_type为模板类型，返回值roi为截掉模板之后的图像。）
 \begin{lstlisting}
 Mat MatchingMethod(Mat src, Mat _template, int template_type)
 {
@@ -271,7 +271,7 @@ Mat MatchingMethod(Mat src, Mat _template, int template_type)
 
 \subsubsection*{灰度化}
 \label{sub:灰度化}
-一张彩色图像在计算机中是由若干个像素点的形式存在，像素点的多少取决于图像的分辨率PPI（Pixel Per Inch），而每个像素点最常见的表示形式是RGB（Red，Green，Blue，即红。绿。蓝）三原色，三原色的不同组合比例能表示丰富的色彩。而灰度图（Greyscale Image）则是另外一种表示形式，它只保存了每个像素的亮度（Intensity）信息，将RGB图像转换为灰度图需满足\autoref{eq:RGBtoGray}：
+一张彩色图像在计算机中是由若干个像素点的形式存在，像素点的多少取决于图像的分辨率PPI（Pixels Per Inch），而每个像素点最常见的表示形式是RGB（Red，Green，Blue，即红。绿。蓝）三原色，三原色的不同组合比例能表示丰富的色彩。而灰度图（Greyscale Image）则是另外一种表示形式，它只保存了每个像素的亮度（Intensity）信息，将RGB图像转换为灰度图需满足\autoref{eq:RGBtoGray}：
 \begin{equation} \label{eq:RGBtoGray}
 		\begin{split}
 & P(x,y) = \alpha R(x,y) + \beta G(x,y) + \gamma B(x,y),  \\
@@ -312,14 +312,14 @@ Mat MatchingMethod(Mat src, Mat _template, int template_type)
 \end{equation}
 其中$x$表示像素点的灰度值（常见取值为$0-255$），$threshold$为二值化的阈值，当$x$大于阈值时，该像素点为白色，反之为黑色。OpenCV提供了两种二值化方法，分别是固定阈值方法和自适应阈值方法。
 
-固定阈值方法，即需要事先指定一个全局阈值，根据这个阈值对灰度图进行二值化，函数原型为
+固定阈值方法，即需要事先指定一个全局阈值，根据这个阈值对灰度图进行二值化，函数原型为：
 \begin{lstlisting}
 double threshold(InputArray src, OutputArray dst, double thresh, double maxval, int type)
 \end{lstlisting}
-固定阈值方法虽然实现简单，但是阈值需要人工选取，很难保证效果，当阈值选的太大时，会产生很多噪声，淹没主体（见\autoref{lena_binary_130}），阈值选的太小时，又会丢失大量的细节（见\autoref{lena_binary_70}），因此这种方法在具体实施时并不推荐。
+固定阈值方法虽然实现简单，但是阈值需要人工选取，很难保证效果，当阈值选的太大时，会产生很多噪声，淹没主体（见\autoref{pic:lena_binary_130}），阈值选的太小时，又会丢失大量的细节（见\autoref{pic:lena_binary_70}），因此这种方法在具体实施时并不推荐。
 
 自适应阈值方法，它的原理是根据每个像素的邻域像素值来确定当前像素的二值化阈值，它的优点是每个像素的二值化阈值是动态的，由像素周围区域像素的分布确定。对于高亮度区域，对应的二值化阈值一般也会较高，反之二值化阈值就会相应的较小。这样不同亮度、对比度和一些细节纹理都会拥有与之匹配的局部二值化阈值\citep{binarization}。
-自适应阈值二值化效果见\autoref{lena_binary_adaptive}，图片即保证了主体的明确，没有很多噪声，又保留了大部分的细节。
+自适应阈值二值化效果见\autoref{pic:lena_binary_adaptive}，图片即保证了主体的明确，没有很多噪声，又保留了大部分的细节。
 
 \begin{figure}[htbp]
   \centering
@@ -361,7 +361,7 @@ double threshold(InputArray src, OutputArray dst, double thresh, double maxval, 
 \subsubsection*{图像的膨胀和腐蚀}
 图像的膨胀和腐蚀是两种常见的图像形态学操作（Morphological Operations），形态学操作简而言之，就是根据一个结构化元素（Structuring Element）对输入图片进行一系列基于外形的图像处理操作，得到输出图片。图像的膨胀和腐蚀在很多方面都有应用，例如去噪、个体元素提取或连接等。
 
-膨胀（Dilation)，可以被看做一个是基于某个核（Kernel）$B$的卷积（convoluting）操作，这个核$B$可以是任意的形状和大小，一般来说是方形或者是原型，
+膨胀（Dilation)，可以被看做一个是基于某个核（Kernel）$B$的卷积（convoluting）操作，这个核$B$可以是任意的形状和大小，一般来说是方形或者是圆型，
 核$B$一般有一个预先定义好的锚点（anchor point），一般来说是核的中心。当核$B$依次扫过图片的时候，在$B$与图片的重叠区域，算法会计算区域内的最大值，并将当前锚点的值替换为这个最大值，显然，这样的最大化操作会使图片中比较亮的区域扩张，如\autoref{pic:dangan}中，\autoref{pic:dangan_origin}是包含有“档案”两个字的原图，\autoref{pic:dangan_dilated}则是经过膨胀操作以后的效果。
 
 腐蚀（Erosion），则可以被认为是膨胀的“反操作”，即当核$B$扫过原图时，将锚点的值替换为重叠区域的最小值，这种最小化操作会使图片中比较亮的区域收缩，对应的暗色区域扩展，图片的腐蚀效果可见\autoref{pic:dangan_eroded}。
@@ -526,9 +526,9 @@ double threshold(InputArray src, OutputArray dst, double thresh, double maxval, 
   \caption{图片连通域分析}
   \label{pic:connected-component-analysis}
 \end{figure}
-连通域分析（Connected Component Analysis），是图像处理中一种常见的图片分割方法，顾名思义，它的主要作用是找到一张图片中（一般为二值图）连通的若干个子区域，并将它们从原图中划分出来，连通域分析方法在图像处理中有着广泛的应用，如人脸识别\citep{kuchi2002human}，场景文字检测（Scene Text Detection）\citep{koo2013scene}，网络中的社群发现（Community Detection）\citep{duch2005community}等等。另外，也有许多工作致力于快速地进行连通域分析，如优化两遍扫描法\citep{wu2009optimizing}，线性时间连通域分析\citep{suzuki2003linear}，并行化连通域分析\citep{han1990efficient}等等。
+连通域分析（Connected Component Analysis），是图像处理中一种常见的图片分割方法，顾名思义，它的主要作用是找到一张图片中（一般为二值图）连通的若干个子区域，并将它们从原图中划分出来，连通域分析方法在图像处理中有着广泛的应用，如人脸识别\citep{kuchi2002human}，场景文字检测（Scene Text Detection）\citep{koo2013scene}，网络中的社群发现（Community Detection）\citep{duch2005community}等等。另外，也有许多研究工作致力于快速地进行连通域分析，如优化两遍扫描法\citep{wu2009optimizing}，线性时间连通域分析\citep{suzuki2003linear}，并行化连通域分析\citep{han1990efficient}等等。
 
-最常见的连通域分析方法有两遍扫描法（Two-Pass）和种子填充法（Seed Filling），两遍扫描法通过扫描两遍图像，获得全图的连通域信息并标注出来，而种子填充法则是先选取一个像素点作为种子（初始连通域），每次迭代都将与连通域相邻的像素纳入，知道找到所有属于同一连通域的像素集合，构成最终的连通域，然后重新选取种子确定下一个连通域，直到所有的连通域被找到，算法终止。在OpenCV中也内置了连通域分析函数。
+最常见的连通域分析方法有两遍扫描法（Two-Pass）和种子填充法（Seed Filling），两遍扫描法通过扫描两遍图像，获得全图的连通域信息并标注出来，而种子填充法则是先选取一个像素点作为种子（初始连通域），每次迭代都将与连通域相邻的像素纳入，直到找到所有属于同一连通域的像素集合，构成最终的连通域，然后重新选取种子确定下一个连通域，直到所有的连通域被找到，算法终止。在OpenCV中也内置了连通域分析函数。
 
 我们注意到，在病历图片中，虽然字段间有一定的间隔，但字与字之间，甚至是字的内部，很多都是不连通的，如果我们直接对\autoref{pic:bingli1_contours_origin}进行连通域划分，效果会很差，因此，需要对原图片进行与前一小节类似的灰度化、二值化、腐蚀等处理，将字内部、字与字之间都连接起来，同时保持字段的分隔，\autoref{pic:bingli1_contours_origin}经过这一系列转换，我们得到如\autoref{pic:bingli1_contours_eroded}所示的二值化腐蚀图像，然后对它进行连通域分析，再将找到的连通域位置映射到原图，就得到\autoref{pic:bingli1_contours}，我们看到，各个字段被矩形框框住，同时字段与字段之间很好的分隔开了，字段提取工作完成。
 
@@ -586,7 +586,7 @@ void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=
 \end{figure}
 
 \section{OCR模块}     % 6000字
-在前面的章节中，我们已经简要介绍了开源OCR引擎Tesseract的发展历史和基本现状，作为整个系统的核心模块，我们有必要对Tesseract有更加详细的了解，接下来，我们将从架构、实现细节方面来展开介绍。这部分内容主要参考自Tesseract的开发者Ray Smith的两篇文章\autoref{smith2007Tesseract,smith2013history}以及部分Tesseract的源码\footnote{Tesseract源码可见：https://github.com/tesseract-ocr/tesseract}。
+在前面的章节中，我们已经简要介绍了开源OCR引擎Tesseract的发展历史和基本现状，作为整个系统的核心模块，我们有必要对Tesseract有更加详细的了解，接下来，我们将从架构、实现细节方面来展开介绍。这部分内容主要参考自Tesseract的开发者Ray Smith的两篇文章\citep{smith2007Tesseract,smith2013history}以及部分Tesseract的源码\footnote{Tesseract源码可见：https://github.com/tesseract-ocr/tesseract}。
 
 \subsection{整体流程}
 首先要说明的是，由于惠普公司当时在开发这套系统的时候，使用的是公司内部固定的版式，因此，从一开始Tesseract就不需要自己的版面分析系统，因此，Tesseract默认假设输入的图片数据是已经二值化的只包含若干个文本区域的图片数据。整个处理流程是比较传统的逐步管道模式（step-by-step pipeline）。
