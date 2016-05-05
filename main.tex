@@ -54,7 +54,7 @@
   %\covertitle{中文题目第一行\\中文题目第二行}
   %不要在此调整封皮字体大小！ Do not set Cover Page font size here!
   %特殊情况4：本例中\title中含有多个换行，导致标题超过了两行。根据制本厂规定，封皮标题不能超过两行。因此需要定义封皮使用的标题\covertitle. 如果你注释掉这一行，就会发现封皮不符合规定。
-  \encovertitle{USTC Thesis Template for Bachelor, Master and Doctor User's Guide(Beta)}
+  \encovertitle{Automatic patients' profiles generation based on Chinese character recognition}
   %\encovertitle{English Title Line 1\\English Title Line 2\\English Title Line 3}
   %不要在此调整封皮字体大小！ Do not set Cover Page font size here!
   %特殊情况5:仅本科生有用。本科封皮中有英文标题，不超过三行。与上类似。
@@ -71,7 +71,7 @@
   % 英文封面内容
   \entitle{Automatic patients' profiles generation based on Chinese character recognition}
   \enauthor{Wangyang Shen}
-  \enmajor{Computer Science}
+  \enmajor{computer application technology}
   \enadvisor{Prof. Ke Tang}
   %\encoadvisor{Prof. Chenzhu Feng}%另外一个导师
   \ensubmitdate{April, 2016}
@@ -99,7 +99,7 @@
 \begin{document}
 
   % 封面
-  %\maketitle
+  \maketitle
 
 %特别注意，以下述顺序为准，在对应部分添加文档部件，切勿颠倒顺序：
 %本科论文的文档部件顺序是：
@@ -209,7 +209,7 @@
   \makeatletter
   \ifustc@bachelor\relax\else
     % 致谢
-	%\include{chapter/thanks}%硕博致谢部分
+	\include{chapter/thanks}%硕博致谢部分
     % 发表文章目录
     %\include{chapter/pub}
   \fi
