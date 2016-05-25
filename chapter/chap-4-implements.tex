@@ -11,7 +11,7 @@
 
 结合前一章的分析我们可以看到，整个系统的六个模块（\autoref{pic:system-framework}）中，数据加载模块、版面分析模块、预处理模块都需要用到图像处理的技术，因此我们有必要综合所有模块的需求，选取一个合适的图像处理解决方案。目前比较主流的图像处理类库有OpenCV\citep{bradski2008OpenCV}、EmguCV\citep{Shi013emgu}、AForge.net\citep{Kirillov2013Aforge}、CImg\citep{tschumperle2012cimg}等，在\citep{XianrongWang}的文章中，作者对几大主流的的图像处理库在各个维度做了一个比较全面的对比。从\autoref{pic:image-processing-comparison}中可以看到，OpenCV在性能上，是其中的佼佼者，也是最为广泛使用的图像处理类库，在功能上，也能完全满足本系统的图像处理要求，故经过比较后，系统决定采用它作为图像处理的解决方案。
 
-\begin{figure}
+\begin{figure}[htbp]
 	\centering
 	\caption{几种图像处理库的性能比较}
 	\includegraphics[width=0.9\textwidth]{Image-Processing-Comparison}
@@ -48,7 +48,7 @@ int main(void)
 
 具体到本系统，我们是要将光学字符识别技术应用到纸质或截图保存的病历数据中，这项技术会在OCR模块中用到，在技术实现上与其他基于光学字符识别的应用并没有本质的不同，因此我们可以采用已有的OCR解决方案。目前比较主流的OCR解决方案有ABBYY FineReader、Microsoft Office内置的OCR模块、Tesseract、FreeOCR等，维基百科中有对各种OCR软件的详细对比\citep{wiki:OCRcomparison}，同时，也有组织对于最好的OCR软件做过一个排名（见\autoref{pic:ocr-software-comparison}），从这个排名中我们可以看到，好的商用OCR软件一般都售价不菲（图片中的价格仅针对个人用户），同时由于病历数据的版面结构复杂，并没有一个比较通用的版面分析方案，所以这些商用OCR软件无法直接应用到系统中，因此，本系统需要一个有提供编程接口（Application Programming Interface，API）的OCR解决方案，方便定制特定场景下的OCR。能提供编程接口的OCR引擎中，Tesseract是其中的首选。
 
-\begin{figure}
+\begin{figure}[htbp]
 	\centering
 	\caption{某组织对现有OCR软件的排名}
 	\includegraphics[width=0.9\textwidth]{ocr-software-comparison}
@@ -167,7 +167,7 @@ R(x,y)=\sum_{x^{'},y^{'}}(T(x^{'},y^{'})\cdot I(x+x^{'},y+y^{'}))
 \end{equation}
 其中，$T(x^{'},y^{'})$表示模板图像中的点，$I(x+x^{'},y+y^{'})$表示原始图像滑动窗口中对应的点。平方差匹配算子衡量的是两者的差别，所以这个值越低，说明匹配度越高，而相关匹配算子衡量的是两者的相关性，所以这个值越高，说明匹配度越高。
 
-\begin{figure}
+\begin{figure}[htbp]
 	\centering
 	\caption{系统信息栏模板}
 	\includegraphics[width=0.9\textwidth]{title-template}
@@ -611,7 +611,7 @@ void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=
 
 \subsubsection*{不等宽单词的划分}
 不等宽单词的划分是识别中的一个难点，如\autoref{pic:difficult-word-spacing}中所示的单词“of”和“financial”，如果我们用两个边界框（bounding box）将它们框起来的话，会发现这两个单词之间并没有任何横向间隔（horizontal gap），意即计算机系统是无法根据边界框来将这两个单词划分出来的，但是人却能很明显地将它们区分开来，为什么呢？一个比较有说服力的解释是我们是从两个两个单词的中线部分能明显看到间隔。Tesseract也是利用了这个知识，在处理不等宽单词的划分时，它考量的是单词在基线（baseline）与中线（mean line）之间的某个区域内的间隔，这样就能将它们很明确的划分开来。
-\begin{figure}
+\begin{figure}[htbp]
 	\centering
 	\caption{不等宽单词的划分}
 	\includegraphics[width=0.5\textwidth]{difficult-word-spacing}
@@ -623,7 +623,7 @@ void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=
 
 \subsubsection*{粘连字符的切分}
 有时候由于预处理是文字的放缩失当，会导致部分字符粘连在一起，如\autoref{pic:chopping-joint-characters}中所示单词“arm”就被粘连在一起，这样势必导致识别置信度较低，此时，Tesseract会尝试对粘连字符（置信度得分低的字块）进行切分，切分的候选点是所有轮廓多边形的凹点（concave vertices），即\autoref{pic:chopping-joint-characters}中小三角形标注的点，Tesseract会逐一按照各个凹点进行切分，重新识别，只保留置信度较高的切分方式，这样，就能正确地将三个字母正确切分出来。
-\begin{figure}
+\begin{figure}[htbp]
 	\centering
 	\caption{粘连字符的切分}
 	\includegraphics[width=0.5\textwidth]{chopping-joint-characters}
@@ -669,7 +669,7 @@ Tesseract官方提供了一个中文字符库\footnote{官方提供的多种语�
 	\item 利用训练工具，得到最终的字符库。
 \end{itemize}
 
-\begin{figure}
+\begin{figure}[htbp]
 	\centering
 	\caption{校正训练字库}
 	\includegraphics[width=0.6\textwidth]{fix-trainingset}
@@ -682,6 +682,13 @@ Tesseract也是支持添加用户字典的，在Tesseract中，字典数据以DA
 
 \subsection{其他细节}
 值得一提的是，在Windows平台，Tesseract识别的文本在显示时会出现大量的乱码问题，这是因为Windows平台默认的文本代码存储方式是UTF8-WithBOM，而Tesseract引擎识别后产出的文本是以标准UTF8格式的，直接输出势必会产生乱码。因此（在Windows平台）我们需要对文本进行转码，具体的转码步骤是先将UTF8转换成Unicode格式，然后将Unicode转换成Ansi字符标准格式，这两个转换函数可以在\citep{character-encoding}中找到完整的代码和解释。
+\autoref{pic:rough-result}展示了经过ocr模块之后的初步识别结果。观察识别结果可知，版面分析、字段划分提取、文字识别这几步都具备不错的准确率。
+\begin{figure}[htbp]
+	\centering
+	\caption{初步的识别结果}
+	\includegraphics[width=0.6\textwidth]{rough-result}
+	\label{pic:rough-result}
+\end{figure}
 
 \section{字段解析模块}  %2000字
 当含有文本的图片数据经过OCR模块以后，会被转换为文本，这些文本需要进行一定的加工，才能得到我们想要的各字段数据。总体来说，原始的文本需要经过数据清洗、字段匹配、目标文本提取等步骤。我们也可以认为这是数据的“后处理”过程。
@@ -699,7 +706,7 @@ Tesseract也是支持添加用户字典的，在Tesseract中，字典数据以DA
 所谓StartsWith匹配，是指那些以字段名开头的文本，比如“姓名：某某某”，我们可以直接通过开头的文字来判断字段，并去除字段名得到字段的实际内容。因此，我们可以维护一个在文本最开头出现的字段名“StartsWith”列表，系统可以通过查询列表来进行字段匹配。
 \subsubsection*{Includes匹配}
 有些文本则并不是以字段名开头，比如\autoref{pic:IncludesWith-example}中显示的字段，由于文字高度不同，OCR引擎不会最先识别“家庭住址：”，导致这个字段名会隐藏在文本的中段，因此，我们需要维护一个在文本中段出现的字段名“IncludesWith”列表，同时运用一些子字符串匹配的高效算法进行字段匹配，去除字段名得到字段的实际内容。在本系统中用到的子字符串匹配算法为AC多模匹配算法（Aho-Corasick algorithm）\citep{aho1975efficient}，它是计算机科学中常见的一种字符串匹配算法，算法时间复杂度能达到$O(n)$，为本系统的子字符串匹配提供了效率保障。
-\begin{figure}
+\begin{figure}[htbp]
 	\centering
 	\caption{不以字段名为开头的字段举例}
 	\includegraphics[width=0.5\textwidth]{IncludesWith-example}
