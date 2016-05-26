@@ -682,7 +682,7 @@ Tesseract也是支持添加用户字典的，在Tesseract中，字典数据以DA
 
 \subsection{其他细节}
 值得一提的是，在Windows平台，Tesseract识别的文本在显示时会出现大量的乱码问题，这是因为Windows平台默认的文本代码存储方式是UTF8-WithBOM，而Tesseract引擎识别后产出的文本是以标准UTF8格式的，直接输出势必会产生乱码。因此（在Windows平台）我们需要对文本进行转码，具体的转码步骤是先将UTF8转换成Unicode格式，然后将Unicode转换成Ansi字符标准格式，这两个转换函数可以在\citep{character-encoding}中找到完整的代码和解释。
-\autoref{pic:rough-result}展示了经过ocr模块之后的初步识别结果。观察识别结果可知，版面分析、字段划分提取、文字识别这几步都具备不错的准确率。
+\autoref{pic:rough-result}展示了经过ocr模块之后的初步识别结果。观察识别结果可知，版面分析、字段划分提取、文字识别这几步都具备不错的准确率。对于图中一些冗余的字符和误识别的字词，会在之后的字段解析模块中进一步矫正。
 \begin{figure}[htbp]
 	\centering
 	\caption{初步的识别结果}
