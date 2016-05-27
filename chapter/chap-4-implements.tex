@@ -13,8 +13,8 @@
 
 \begin{figure}[htbp]
 	\centering
-	\caption{几种图像处理库的性能比较}
 	\includegraphics[width=0.9\textwidth]{Image-Processing-Comparison}
+	\caption{几种图像处理库的性能比较}
 	\label{pic:image-processing-comparison}
 \end{figure}
 
@@ -50,8 +50,8 @@ int main(void)
 
 \begin{figure}[htbp]
 	\centering
-	\caption{某组织对现有OCR软件的排名}
 	\includegraphics[width=0.9\textwidth]{ocr-software-comparison}
+	\caption{某组织对现有OCR软件的排名}
 	\label{pic:ocr-software-comparison}
 \end{figure}
 
@@ -169,8 +169,8 @@ R(x,y)=\sum_{x^{'},y^{'}}(T(x^{'},y^{'})\cdot I(x+x^{'},y+y^{'}))
 
 \begin{figure}[htbp]
 	\centering
-	\caption{系统信息栏模板}
 	\includegraphics[width=0.9\textwidth]{title-template}
+	\caption{系统信息栏模板}
 	\label{pic:title-template}
 \end{figure}
 
@@ -205,7 +205,6 @@ Mat MatchingMethod(Mat src, Mat _template, int template_type)
 
 \begin{figure}[htbp]
   \centering
-  \caption{病历主体内容截取}
   \subfloat[]{
   \label{pic:template-cut-origin}
   \begin{minipage}[t]{0.3\textwidth}
@@ -227,6 +226,7 @@ Mat MatchingMethod(Mat src, Mat _template, int template_type)
     \includegraphics[width=\textwidth]{cut_sidebar}
   \end{minipage}
   }
+  \caption{病历主体内容截取}
   \label{pic:different-layout}
 \end{figure}
 
@@ -235,7 +235,6 @@ Mat MatchingMethod(Mat src, Mat _template, int template_type)
 
 \begin{figure}[htbp]
   \centering
-  \caption{病历图片的几种版式}
   \subfloat[]{
   \label{fig:sub-input-image-1}
   \begin{minipage}[t]{0.3\textwidth}
@@ -257,6 +256,7 @@ Mat MatchingMethod(Mat src, Mat _template, int template_type)
     \includegraphics[width=\textwidth]{input-image-3}
   \end{minipage}
   }
+  \caption{病历图片的几种版式}
   \label{pic:different-layout}
 \end{figure}
 
@@ -280,7 +280,6 @@ Mat MatchingMethod(Mat src, Mat _template, int template_type)
 
 \begin{figure}[htbp]
   \centering
-  \caption{图片的灰度化}
   \subfloat[]{
   \label{pic:lena}
   \begin{minipage}[t]{0.45\textwidth}
@@ -296,6 +295,7 @@ Mat MatchingMethod(Mat src, Mat _template, int template_type)
     \includegraphics[width=\textwidth]{lena_grey}
   \end{minipage}
   }
+  \caption{图片的灰度化}
   \label{pic:greyscale}
 \end{figure}
 
@@ -321,7 +321,6 @@ double threshold(InputArray src, OutputArray dst, double thresh, double maxval, 
 
 \begin{figure}[htbp]
   \centering
-  \caption{不同二值化方法的差别}
   \subfloat[]{
   \label{pic:lena_binary_origin}
   \begin{minipage}[t]{0.45\textwidth}
@@ -353,6 +352,7 @@ double threshold(InputArray src, OutputArray dst, double thresh, double maxval, 
     \includegraphics[width=\textwidth]{lena_binary_adaptive}
   \end{minipage}
   }
+  \caption{不同二值化方法的差别}
   \label{pic:different-binary-approach}
 \end{figure}
 
@@ -366,7 +366,6 @@ double threshold(InputArray src, OutputArray dst, double thresh, double maxval, 
 
 \begin{figure}[htbp]
   \centering
-  \caption{图片的膨胀和腐蚀}
   \subfloat[]{
   \label{pic:dangan_origin}
   \begin{minipage}[t]{0.3\textwidth}
@@ -388,13 +387,13 @@ double threshold(InputArray src, OutputArray dst, double thresh, double maxval, 
     \includegraphics[width=\textwidth]{dangan_eroded}
   \end{minipage}
   }
+  \caption{图片的膨胀和腐蚀}
   \label{pic:dangan}
 \end{figure}
 
 对图片的灰度化、二值化、膨胀和腐蚀操作有所了解以后，我们就可以利用这些图像处理方法，来进行图片分类任务了。前面我们提到我们是通过比较图片与三种版式图片的相似性来确定图片的版式，如\autoref{pic:layout-comparison}中所示，\autoref{pic:bingli1-cut}、\autoref{pic:bingli2-cut}、\autoref{pic:bingli3-cut}分别是保留主体的模板版式，而\autoref{pic:new-bingli1-cut}则是需要确定版式的新图片，我们只需要确定新图片与三张模板版式图片哪张最接近，就可以确定新图片的版式了。以我们的肉眼判断，测试图片的版式与\autoref{pic:bingli1-cut}是最接近的，但是，对于计算机来说，并不是那么容易判断。
 \begin{figure}[htbp]
   \centering
-  \caption{测试图片与模板图片的比较}
   \subfloat[版式1]{
   \label{pic:bingli1-cut}
   \begin{minipage}[t]{0.23\textwidth}
@@ -456,6 +455,7 @@ double threshold(InputArray src, OutputArray dst, double thresh, double maxval, 
     \includegraphics[width=\textwidth]{new-bingli1-cut-eroded}
   \end{minipage}
   }
+  \caption{测试图片与模板图片的比较}
   \label{pic:layout-comparison}
 \end{figure}
 
@@ -500,7 +500,6 @@ double threshold(InputArray src, OutputArray dst, double thresh, double maxval, 
 接下来是版面分析的最后一步，字段提取。待分析的图片如\autoref{pic:bingli1_contours_origin}所示，我们观察可知，图片中每个字段相对于其他字段都有一定的距离，这使我们很自然的想到的通过连通域分析方法来进行字段提取工作。
 \begin{figure}[htbp]
   \centering
-  \caption{图片连通域分析}
   \subfloat[]{
   \label{pic:bingli1_contours_origin}
   \begin{minipage}[t]{0.3\textwidth}
@@ -522,6 +521,7 @@ double threshold(InputArray src, OutputArray dst, double thresh, double maxval, 
     \includegraphics[width=\textwidth]{bingli1-contours}
   \end{minipage}
   }
+  \caption{图片连通域分析}
   \label{pic:connected-component-analysis}
 \end{figure}
 连通域分析（Connected Component Analysis），是图像处理中一种常见的图片分割方法，顾名思义，它的主要作用是找到一张图片中（一般为二值图）连通的若干个子区域，并将它们从原图中划分出来，连通域分析方法在图像处理中有着广泛的应用，如人脸识别\citep{kuchi2002human}，场景文字检测（Scene Text Detection）\citep{koo2013scene}，网络中的社群发现（Community Detection）\citep{duch2005community}等等。另外，也有许多研究工作致力于快速地进行连通域分析，如优化两遍扫描法\citep{wu2009optimizing}，线性时间连通域分析\citep{suzuki2003linear}，并行化连通域分析\citep{han1990efficient}等等。
@@ -556,7 +556,6 @@ void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=
 同时在实践过程中还发现，有些情况下，左右结构的文字很容易被误分割，例如“日期”会被分割成为“日其月”，这样的误分割可能是横向间隔较大导致的，因此，我们尝试在放缩时减小横向的放缩比例，让文字显得更加细长（如\autoref{pic:image-after-processing-2}所示），发现对于误分割问题有明显改善。
 \begin{figure}[htbp]
   \centering
-  \caption{文字的预处理}
   \subfloat[]{
   \label{pic:image-before-processing}
   \begin{minipage}[t]{0.3\textwidth}
@@ -580,6 +579,7 @@ void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=
     \includegraphics[width=\textwidth]{text-resized-thin}
   \end{minipage}
   }
+  \caption{文字的预处理}
   \label{pic:pre-processing}
 \end{figure}
 
@@ -613,8 +613,8 @@ void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=
 不等宽单词的划分是识别中的一个难点，如\autoref{pic:difficult-word-spacing}中所示的单词“of”和“financial”，如果我们用两个边界框（bounding box）将它们框起来的话，会发现这两个单词之间并没有任何横向间隔（horizontal gap），意即计算机系统是无法根据边界框来将这两个单词划分出来的，但是人却能很明显地将它们区分开来，为什么呢？一个比较有说服力的解释是我们是从两个两个单词的中线部分能明显看到间隔。Tesseract也是利用了这个知识，在处理不等宽单词的划分时，它考量的是单词在基线（baseline）与中线（mean line）之间的某个区域内的间隔，这样就能将它们很明确的划分开来。
 \begin{figure}[htbp]
 	\centering
-	\caption{不等宽单词的划分}
 	\includegraphics[width=0.5\textwidth]{difficult-word-spacing}
+	\caption{不等宽单词的划分}
 	\label{pic:difficult-word-spacing}
 \end{figure}
 
@@ -625,8 +625,8 @@ void resize(InputArray src, OutputArray dst, Size dsize, double fx=0, double fy=
 有时候由于预处理是文字的放缩失当，会导致部分字符粘连在一起，如\autoref{pic:chopping-joint-characters}中所示单词“arm”就被粘连在一起，这样势必导致识别置信度较低，此时，Tesseract会尝试对粘连字符（置信度得分低的字块）进行切分，切分的候选点是所有轮廓多边形的凹点（concave vertices），即\autoref{pic:chopping-joint-characters}中小三角形标注的点，Tesseract会逐一按照各个凹点进行切分，重新识别，只保留置信度较高的切分方式，这样，就能正确地将三个字母正确切分出来。
 \begin{figure}[htbp]
 	\centering
-	\caption{粘连字符的切分}
 	\includegraphics[width=0.5\textwidth]{chopping-joint-characters}
+	\caption{粘连字符的切分}
 	\label{pic:chopping-joint-characters}
 \end{figure}
 
@@ -671,8 +671,8 @@ Tesseract官方提供了一个中文字符库\footnote{官方提供的多种语�
 
 \begin{figure}[htbp]
 	\centering
-	\caption{校正训练字库}
 	\includegraphics[width=0.6\textwidth]{fix-trainingset}
+	\caption{校正训练字库}
 	\label{pic:fix-trainingset}
 \end{figure}
 经过上面这几步，我们就产生了针对病历数据的字符库，同时我们注意到Tesseract是支持多个字符库共用的，所以我们可以将新训练的字符库和Tesseract官方提供的字符库连用，这样既能保证整体的通用性，又能针对病历数据进行优化提升。
@@ -685,8 +685,8 @@ Tesseract也是支持添加用户字典的，在Tesseract中，字典数据以DA
 \autoref{pic:rough-result}展示了经过ocr模块之后的初步识别结果。观察识别结果可知，版面分析、字段划分提取、文字识别这几步都具备不错的准确率。对于图中一些冗余的字符和误识别的字词，会在之后的字段解析模块中进一步矫正。
 \begin{figure}[htbp]
 	\centering
-	\caption{初步的识别结果}
 	\includegraphics[width=0.9\textwidth]{rough-result}
+	\caption{初步的识别结果}
 	\label{pic:rough-result}
 \end{figure}
 
@@ -708,8 +708,8 @@ Tesseract也是支持添加用户字典的，在Tesseract中，字典数据以DA
 有些文本则并不是以字段名开头，比如\autoref{pic:IncludesWith-example}中显示的字段，由于文字高度不同，OCR引擎不会最先识别“家庭住址：”，导致这个字段名会隐藏在文本的中段，因此，我们需要维护一个在文本中段出现的字段名“IncludesWith”列表，同时运用一些子字符串匹配的高效算法进行字段匹配，去除字段名得到字段的实际内容。在本系统中用到的子字符串匹配算法为AC多模匹配算法（Aho-Corasick algorithm）\citep{aho1975efficient}，它是计算机科学中常见的一种字符串匹配算法，算法时间复杂度能达到$O(n)$，为本系统的子字符串匹配提供了效率保障。
 \begin{figure}[htbp]
 	\centering
-	\caption{不以字段名为开头的字段举例}
 	\includegraphics[width=0.5\textwidth]{IncludesWith-example}
+	\caption{不以字段名为开头的字段举例}
 	\label{pic:IncludesWith-example}
 \end{figure}
 
